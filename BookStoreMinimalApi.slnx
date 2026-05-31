@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="BookStoreMinimalApi.Data/BookStoreMinimalApi.Data.csproj" />
+  <Project Path="BookStoreMinimalApi/BookStoreMinimalApi.csproj" />
+</Solution>
