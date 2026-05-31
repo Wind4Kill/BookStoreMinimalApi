@@ -16,7 +16,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BookStoreMinimalApi.Application\BookStoreMinimalApi.Application.csproj" />
     <ProjectReference Include="..\BookStoreMinimalApi.Data\BookStoreMinimalApi.Data.csproj" />
+    <ProjectReference Include="..\BookStoreMinimalApi.Domain\BookStoreMinimalApi.Domain.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,10 @@
+using BookStoreMinimalApi;
+using BookStoreMinimalApi.Application;
 using BookStoreMinimalApi.Data;
+using BookStoreMinimalApi.Data.Repositories;
+using BookStoreMinimalApi.Domain.Interfaces.Repositories;
+using BookStoreMinimalApi.Domain.Interfaces.Services;
+using BookStoreMinimalApi.Endpoints;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,12 +12,17 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddProblemDetails();
 builder.Services.AddDbContext<ApplicationContext>(options =>
 {
+      string? connectionString = builder.Configuration.GetConnectionString("PostgreConnectionString");
+      options.UseNpgsql(connectionString);
+
       if (builder.Environment.IsDevelopment())
       {
-            string? connectionString = builder.Configuration.GetConnectionString("PostgreConnectionString");
-            options.UseNpgsql(connectionString);
+            options.LogTo(Console.WriteLine).EnableSensitiveDataLogging();
       }
 });
+
+builder.Services.AddScoped<IBookRepository, BookRepository>();
+builder.Services.AddScoped<IBookService, BookService>();
 
 if (builder.Environment.IsDevelopment())
 {
@@ -33,6 +44,11 @@ if (app.Environment.IsDevelopment())
       app.UseSwaggerUI();
 }
 
-app.MapGet("/", () => "Hello World!");
+if (app.Environment.IsDevelopment())
+{
+      app.SeedData();
+}
+
+app.AddBookEndpoints();
 
 app.Run();
