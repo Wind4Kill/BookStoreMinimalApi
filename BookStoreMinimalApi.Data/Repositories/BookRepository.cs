@@ -15,10 +15,14 @@ namespace BookStoreMinimalApi.Data.Repositories
         {
             _context = context;
         }
-        public  IQueryable<Book> GetAllBooks()
+        public IQueryable<Book> GetAllBooks()
         {
-            return  _context.Books;
-            
+            return _context.Books;
+        }
+
+        public async Task<Book> GetBookById(int id)
+        {
+            return _context.Books.Single(b => b.BookId == id);
         }
     }
 }

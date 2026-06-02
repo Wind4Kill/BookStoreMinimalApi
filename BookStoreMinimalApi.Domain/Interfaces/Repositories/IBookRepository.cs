@@ -10,5 +10,7 @@ namespace BookStoreMinimalApi.Domain.Interfaces.Repositories
     public interface IBookRepository
     {
         IQueryable<Book> GetAllBooks();
+
+        Task<Book> GetBookById(int id);
     }
 }

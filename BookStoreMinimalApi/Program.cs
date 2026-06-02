@@ -1,10 +1,13 @@
 using BookStoreMinimalApi;
 using BookStoreMinimalApi.Application;
+using BookStoreMinimalApi.Application.Exceptions;
 using BookStoreMinimalApi.Data;
 using BookStoreMinimalApi.Data.Repositories;
 using BookStoreMinimalApi.Domain.Interfaces.Repositories;
 using BookStoreMinimalApi.Domain.Interfaces.Services;
 using BookStoreMinimalApi.Endpoints;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,6 +27,7 @@ builder.Services.AddDbContext<ApplicationContext>(options =>
 builder.Services.AddScoped<IBookRepository, BookRepository>();
 builder.Services.AddScoped<IBookService, BookService>();
 
+
 if (builder.Environment.IsDevelopment())
 {
 
@@ -33,20 +37,46 @@ if (builder.Environment.IsDevelopment())
 
 var app = builder.Build();
 
+app.UseStatusCodePages();
 if (app.Environment.IsProduction())
 {
-      app.UseExceptionHandler();
-}
+      app.UseExceptionHandler(errorApp =>
+      {
+            errorApp.Run(async context =>
+            {
+                  var error = context.Features.Get<IExceptionHandlerFeature>()?.Error;
+                  if (error is null)
+                        return;
 
-if (app.Environment.IsDevelopment())
-{
-      app.UseSwagger();
-      app.UseSwaggerUI();
+                  var (statusCode, message) = error switch
+
+                  {
+                        EntityNotFoundException => (StatusCodes.Status404NotFound, error.Message),
+                        _ => (StatusCodes.Status500InternalServerError, "Internal error has occured")
+                  };
+
+                  var problemDetails = new ProblemDetails
+                  {
+                        Status = statusCode,
+                        Title = message,
+                        Type = $"https://httpstatuses.com/{statusCode}",
+                        Detail = error.Message,
+                        Instance = context.Request.Path
+                  };
+
+                  context.Response.StatusCode = statusCode;
+
+                  await context.Response.WriteAsJsonAsync(problemDetails);
+            });
+      });
+
 }
 
 if (app.Environment.IsDevelopment())
 {
       app.SeedData();
+      app.UseSwagger();
+      app.UseSwaggerUI();
 }
 
 app.AddBookEndpoints();
