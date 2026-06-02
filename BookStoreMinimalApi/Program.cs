@@ -52,7 +52,7 @@ if (app.Environment.IsProduction())
 
                   {
                         EntityNotFoundException => (StatusCodes.Status404NotFound, error.Message),
-                        _ => (StatusCodes.Status500InternalServerError, "Internal error has occured")
+                        _ => (StatusCodes.Status500InternalServerError, error.Message)
                   };
 
                   var problemDetails = new ProblemDetails

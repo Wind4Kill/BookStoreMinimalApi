@@ -1,13 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using BookStoreMinimalApi.Application.Exceptions;
 using BookStoreMinimalApi.Data;
 using BookStoreMinimalApi.Domain.DTOs;
 using BookStoreMinimalApi.Domain.DTOs.BookDTOs;
 using BookStoreMinimalApi.Domain.Interfaces.Repositories;
 using BookStoreMinimalApi.Domain.Interfaces.Services;
+using BookStoreMinimalApi.Domain.FiltrationEntities;
 
 namespace BookStoreMinimalApi.Application
 {
@@ -19,23 +16,25 @@ namespace BookStoreMinimalApi.Application
             _bookRepository = bookRepository;
         }
 
-        public async Task<List<GetBookDTO>> GetAllBooks()
+        public async Task<List<GetBookDTO>> GetAllBooks(Filtration filters)
         {
-            List<GetBookDTO> filteredBooks = await _bookRepository.GetAllBooks().Select(b =>
+            List<GetBookDTO> filteredBooks = await _bookRepository.GetAllBooks().
+            OrderEntities(filters.OrderOptions, filters.FilterValue!).FilterEntities(filters.FilterOptions, filters.FilterValue!).
+            Paginate(filters.PageNum).Select(b =>
             new GetBookDTO
             {
                 BookId = b.BookId,
                 Title = b.Title,
                 Cost = b.Cost
             }).ToAsyncEnumerable().ToListAsync();
-            
+
             return filteredBooks;
         }
 
         public async Task<GetBookByIdDTO> GetBookById(int id)
         {
             Book requestedBook = await _bookRepository.GetBookById(id);
-            if(requestedBook is null)
+            if (requestedBook is null)
             {
                 throw new EntityNotFoundException("Book with such ID couldn't be found.");
             }
@@ -44,9 +43,9 @@ namespace BookStoreMinimalApi.Application
             {
                 Description = requestedBook.Description,
                 Title = requestedBook.Title,
-                Cost=requestedBook.Cost
+                Cost = requestedBook.Cost
             };
-           
+
         }
     }
 }
