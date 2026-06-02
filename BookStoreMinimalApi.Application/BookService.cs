@@ -1,0 +1,51 @@
+using BookStoreMinimalApi.Application.Exceptions;
+using BookStoreMinimalApi.Data;
+using BookStoreMinimalApi.Domain.DTOs;
+using BookStoreMinimalApi.Domain.DTOs.BookDTOs;
+using BookStoreMinimalApi.Domain.Interfaces.Repositories;
+using BookStoreMinimalApi.Domain.Interfaces.Services;
+using BookStoreMinimalApi.Domain.FiltrationEntities;
+
+namespace BookStoreMinimalApi.Application
+{
+    public class BookService : IBookService
+    {
+        readonly IBookRepository _bookRepository;
+        public BookService(IBookRepository bookRepository)
+        {
+            _bookRepository = bookRepository;
+        }
+
+        public async Task<List<GetBookDTO>> GetAllBooks(Filtration filters)
+        {
+            List<GetBookDTO> filteredBooks = await _bookRepository.GetAllBooks().
+            OrderEntities(filters.OrderOptions, filters.FilterValue!).FilterEntities(filters.FilterOptions, filters.FilterValue!).
+            Paginate(filters.PageNum).Select(b =>
+            new GetBookDTO
+            {
+                BookId = b.BookId,
+                Title = b.Title,
+                Cost = b.Cost
+            }).ToAsyncEnumerable().ToListAsync();
+
+            return filteredBooks;
+        }
+
+        public async Task<GetBookByIdDTO> GetBookById(int id)
+        {
+            Book requestedBook = await _bookRepository.GetBookById(id);
+            if (requestedBook is null)
+            {
+                throw new EntityNotFoundException("Book with such ID couldn't be found.");
+            }
+
+            return new GetBookByIdDTO()
+            {
+                Description = requestedBook.Description,
+                Title = requestedBook.Title,
+                Cost = requestedBook.Cost
+            };
+
+        }
+    }
+}
