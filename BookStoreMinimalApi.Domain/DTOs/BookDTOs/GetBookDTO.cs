@@ -8,7 +8,7 @@ namespace BookStoreMinimalApi.Domain.DTOs.BookDTOs
     public class GetBookDTO
     {
         public int BookId { get; set; }
-        public string Title { get; set; } = null!;
+        public required string Title { get; set; }
         public decimal Cost { get; set; }
     }
 }

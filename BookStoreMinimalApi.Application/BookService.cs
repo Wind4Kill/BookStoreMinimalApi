@@ -16,6 +16,32 @@ namespace BookStoreMinimalApi.Application
             _bookRepository = bookRepository;
         }
 
+        public async Task<Book> CreateBook(CreateBookDto bookDto)
+        {
+            Book createdBook = new Book()
+            {
+                Title = bookDto.Title,
+                Description = bookDto.Description,
+                Cost = bookDto.Cost
+            };
+
+            return await _bookRepository.AddBook(createdBook);
+        }
+
+        public async Task<int> DeleteBook(int id)
+        {
+            try
+
+            {
+                int affectedRows = await _bookRepository.DeleteBook(id);
+                return affectedRows;
+            }
+            catch (Exception ex)
+            {
+                throw new EntityNotFoundException("Book with such ID wasn't found and can't be deleted.", ex);
+            }
+        }
+
         public async Task<List<GetBookDTO>> GetAllBooks(Filtration filters)
         {
             List<GetBookDTO> filteredBooks = await _bookRepository.GetAllBooks().
@@ -33,7 +59,7 @@ namespace BookStoreMinimalApi.Application
 
         public async Task<GetBookByIdDTO> GetBookById(int id)
         {
-            Book requestedBook = await _bookRepository.GetBookById(id);
+            Book? requestedBook = await _bookRepository.GetBookById(id);
             if (requestedBook is null)
             {
                 throw new EntityNotFoundException("Book with such ID couldn't be found.");

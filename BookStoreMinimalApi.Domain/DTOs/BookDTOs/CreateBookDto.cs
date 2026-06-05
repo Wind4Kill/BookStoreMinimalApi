@@ -3,19 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BookStoreMinimalApi.Data
+namespace BookStoreMinimalApi.Domain.DTOs.BookDTOs
 {
-    public class Book
+    public class CreateBookDto
     {
-        public int BookId { get; set; }
-
         public required string Title { get; set; }
 
         public required string Description { get; set; }
 
-        public decimal Cost { get; set; }
-
-        public bool IsDeleted { get; set; }
-
+        public int Cost { get; set; }
     }
 }

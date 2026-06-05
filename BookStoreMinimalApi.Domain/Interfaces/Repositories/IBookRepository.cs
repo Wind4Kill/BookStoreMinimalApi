@@ -11,6 +11,11 @@ namespace BookStoreMinimalApi.Domain.Interfaces.Repositories
     {
         IQueryable<Book> GetAllBooks();
 
-        Task<Book> GetBookById(int id);
+        Task<Book?> GetBookById(int id);
+
+        Task<Book> AddBook(Book book);
+
+        Task<int> DeleteBook(int id);
+        
     }
 }

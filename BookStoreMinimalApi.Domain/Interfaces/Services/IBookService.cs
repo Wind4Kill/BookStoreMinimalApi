@@ -14,6 +14,11 @@ namespace BookStoreMinimalApi.Domain.Interfaces.Services
         Task<List<GetBookDTO>> GetAllBooks(Filtration filters);
 
         Task<GetBookByIdDTO> GetBookById(int id);
+
+        Task<Book> CreateBook(CreateBookDto bookDto);
+
+        Task<int> DeleteBook(int id);
+        
         
     }
 }

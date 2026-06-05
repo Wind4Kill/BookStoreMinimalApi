@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Threading.Tasks;
 using BookStoreMinimalApi.Domain.DTOs.BookDTOs;
 using BookStoreMinimalApi.Domain.Interfaces.Repositories;
@@ -15,14 +16,30 @@ namespace BookStoreMinimalApi.Data.Repositories
         {
             _context = context;
         }
+
+        public async Task<Book> AddBook(Book book)
+        {
+            _context.Add(book);
+            await _context.SaveChangesAsync();
+            return book;
+        }
+
+        public async Task<int> DeleteBook(int id)
+        {
+            Book requestedBook = _context.Books.Single(b => b.BookId == id);
+            requestedBook.IsDeleted = true;
+            return await _context.SaveChangesAsync();
+        }
+
         public IQueryable<Book> GetAllBooks()
         {
             return _context.Books;
         }
 
-        public async Task<Book> GetBookById(int id)
+        public async Task<Book?> GetBookById(int id)
         {
-            return _context.Books.Single(b => b.BookId == id);
+            return _context.Books.SingleOrDefault(b => b.BookId == id);
         }
+        
     }
 }

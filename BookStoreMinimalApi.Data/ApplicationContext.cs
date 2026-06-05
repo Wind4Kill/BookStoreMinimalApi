@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Reflection;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookStoreMinimalApi.Data;
 
@@ -9,7 +10,7 @@ public class ApplicationContext:DbContext
 
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
-            
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
       }
       
 }
