@@ -5,6 +5,7 @@ using BookStoreMinimalApi.Domain.DTOs.BookDTOs;
 using BookStoreMinimalApi.Domain.Interfaces.Repositories;
 using BookStoreMinimalApi.Domain.Interfaces.Services;
 using BookStoreMinimalApi.Domain.FiltrationEntities;
+using BookStoreMinimalApi.Domain.Entities;
 
 namespace BookStoreMinimalApi.Application
 {
@@ -22,7 +23,8 @@ namespace BookStoreMinimalApi.Application
             {
                 Title = bookDto.Title,
                 Description = bookDto.Description,
-                Cost = bookDto.Cost
+                Cost = bookDto.Cost,
+                Author = new Author { Name = bookDto.Author.Name }
             };
 
             return await _bookRepository.AddBook(createdBook);
@@ -31,7 +33,6 @@ namespace BookStoreMinimalApi.Application
         public async Task<int> DeleteBook(int id)
         {
             try
-
             {
                 int affectedRows = await _bookRepository.DeleteBook(id);
                 return affectedRows;
