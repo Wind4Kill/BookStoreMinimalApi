@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BookStoreMinimalApi.Domain.Entities;
 
 namespace BookStoreMinimalApi.Data
 {
@@ -16,6 +17,10 @@ namespace BookStoreMinimalApi.Data
         public decimal Cost { get; set; }
 
         public bool IsDeleted { get; set; }
+
+        public required Author Author { get; set; }
+
+        public int AuthorId { get; set; }
 
     }
 }
