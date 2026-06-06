@@ -38,7 +38,7 @@ namespace BookStoreMinimalApi.Data.Repositories
 
         public async Task<Book?> GetBookById(int id)
         {
-            return _context.Books.SingleOrDefault(b => b.BookId == id);
+            return _context.Books.Include(b=>b.Author).SingleOrDefault(b => b.BookId == id);
         }
         
     }

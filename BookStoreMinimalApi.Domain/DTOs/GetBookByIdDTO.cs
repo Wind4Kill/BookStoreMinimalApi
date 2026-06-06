@@ -13,5 +13,7 @@ namespace BookStoreMinimalApi.Domain.DTOs
 
         public required string Description { get; set; }
 
+        public required string AuthorName { get; set; }
+
     }
 }

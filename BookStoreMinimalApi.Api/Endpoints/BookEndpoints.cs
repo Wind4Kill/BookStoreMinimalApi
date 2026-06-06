@@ -11,7 +11,7 @@ namespace BookStoreMinimalApi.Endpoints
     {
         public static void AddBookEndpoints(this WebApplication app)
         {
-            var bookEndpoints = app.MapGroup("Book").WithTags("Books");
+            var bookEndpoints = app.MapGroup("api/books").WithTags("Books");
             bookEndpoints.MapGet("", async ([AsParameters] Filters filters, IBookService service) =>
             {
                 Filtration filtration = new();

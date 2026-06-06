@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BookStoreMinimalApi.Data;
+using BookStoreMinimalApi.Domain.Entities;
 
 namespace BookStoreMinimalApi
 {
@@ -21,13 +22,21 @@ namespace BookStoreMinimalApi
                     {
                         Cost=1000,
                          Title="C# in details",
-                        Description = "Book for C# pros"
+                        Description = "Book for C# pros",
+                        Author=new Author()
+                        {
+                            Name= "Anders Helsberg"
+                        }
                     },
                     new Book
                     {
                         Cost=1500,
                         Title="Java advanced",
-                        Description ="Java for mastery"
+                        Description = "Java for mastery",
+                        Author = new Author()
+                        {
+                            Name= "James Gosling"
+                        }
                     }
                 };
                 _context.AddRange(addedBooks);

@@ -70,7 +70,8 @@ namespace BookStoreMinimalApi.Application
             {
                 Description = requestedBook.Description,
                 Title = requestedBook.Title,
-                Cost = requestedBook.Cost
+                Cost = requestedBook.Cost,
+                AuthorName = requestedBook.Author.Name
             };
 
         }
