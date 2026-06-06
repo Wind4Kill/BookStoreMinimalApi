@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using BookStoreMinimalApi;
 using BookStoreMinimalApi.Application;
 using BookStoreMinimalApi.Application.Exceptions;
@@ -20,7 +21,8 @@ builder.Services.AddDbContext<ApplicationContext>(options =>
 
       if (builder.Environment.IsDevelopment())
       {
-            options.LogTo(Console.WriteLine).EnableSensitiveDataLogging();
+            options.LogTo((message) => Debug.WriteLine(message), LogLevel.Information).
+            EnableSensitiveDataLogging().EnableDetailedErrors();
       }
 });
 

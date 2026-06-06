@@ -43,14 +43,14 @@ namespace BookStoreMinimalApi.Endpoints
             {
                 GetBookByIdDTO requestedBookDto = await service.GetBookById(id);
                 return Results.Ok(requestedBookDto);
-            }).Produces<GetBookByIdDTO>().ProducesProblem(statusCode: 404).WithName("GetBookById");
+            }).Produces<GetBookByIdDTO>().WithName("GetBookById");
 
             bookEndpoints.MapPost("", async (CreateBookDto bookDto, IBookService service, LinkGenerator linkGenerator) =>
             {
                 Book createdBook = await service.CreateBook(bookDto);
                 string? link = linkGenerator.GetPathByName("GetBookById", new LinkOptions() { LowercaseUrls = true });
                 return Results.Created(link, createdBook);
-            });
+            }).WithParameterValidation().Produces(201);
 
             bookEndpoints.MapDelete("/{id:int}", async (int id, IBookService service) =>
             {
