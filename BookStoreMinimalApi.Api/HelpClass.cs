@@ -4,12 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using BookStoreMinimalApi.Data;
 using BookStoreMinimalApi.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookStoreMinimalApi
 {
     public static class HelpClass
     {
-        public async static void SeedData(this WebApplication app)
+        public async static Task SeedData(this WebApplication app)
         {
             using var scope = app.Services.CreateAsyncScope();
 
@@ -41,6 +42,29 @@ namespace BookStoreMinimalApi
                 };
                 _context.AddRange(addedBooks);
                 await _context.SaveChangesAsync();
+            }
+            return;
+        }
+
+        public static async Task UpdateDatabase(this WebApplication app)
+        {
+            using var scope = app.Services.CreateAsyncScope();
+
+            var _context = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
+
+            if (_context.Database.GetPendingMigrations().Any())
+            {
+                try
+
+                {
+
+                }
+                catch (Exception)
+
+                {
+                    throw;
+                }
+                await _context.Database.MigrateAsync();
             }
         }
     }

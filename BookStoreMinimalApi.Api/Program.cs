@@ -17,12 +17,16 @@ builder.Services.AddProblemDetails();
 builder.Services.AddDbContext<ApplicationContext>(options =>
 {
       string? connectionString = builder.Configuration.GetConnectionString("PostgreConnectionString");
-      options.UseNpgsql(connectionString);
+      options.UseNpgsql(connectionString, (options) => options.EnableRetryOnFailure(5, TimeSpan.FromMilliseconds(3000), null));
 
       if (builder.Environment.IsDevelopment())
       {
             options.LogTo((message) => Debug.WriteLine(message), LogLevel.Information).
             EnableSensitiveDataLogging().EnableDetailedErrors();
+      }
+      if(builder.Environment.IsProduction())
+      {
+            
       }
 });
 
@@ -72,11 +76,13 @@ if (app.Environment.IsProduction())
             });
       });
 
+      await app.UpdateDatabase();
+
 }
 
 if (app.Environment.IsDevelopment())
 {
-      app.SeedData();
+      await app.SeedData();
       app.UseSwagger();
       app.UseSwaggerUI();
 }

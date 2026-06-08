@@ -11,6 +11,8 @@ namespace BookStoreMinimalApi.Domain.Interfaces.Repositories
     {
         IQueryable<Book> GetAllBooks();
 
+        Task<List<T>> ToListAsync<T>(IQueryable<T> query);
+
         Task<Book?> GetBookById(int id);
 
         Task<Book> AddBook(Book book);

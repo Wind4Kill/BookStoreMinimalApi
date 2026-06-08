@@ -45,7 +45,7 @@ namespace BookStoreMinimalApi.Application
 
         public async Task<List<GetBookDTO>> GetAllBooks(Filtration filters)
         {
-            List<GetBookDTO> filteredBooks = await _bookRepository.GetAllBooks().
+            List<GetBookDTO> filteredBooks = await _bookRepository.ToListAsync(_bookRepository.GetAllBooks().
             OrderEntities(filters.OrderOptions, filters.FilterValue!).FilterEntities(filters.FilterOptions, filters.FilterValue!).
             Paginate(filters.PageNum).Select(b =>
             new GetBookDTO
@@ -53,7 +53,7 @@ namespace BookStoreMinimalApi.Application
                 BookId = b.BookId,
                 Title = b.Title,
                 Cost = b.Cost
-            }).ToAsyncEnumerable().ToListAsync();
+            }));
 
             return filteredBooks;
         }
