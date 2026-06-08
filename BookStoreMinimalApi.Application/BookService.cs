@@ -6,15 +6,18 @@ using BookStoreMinimalApi.Domain.Interfaces.Repositories;
 using BookStoreMinimalApi.Domain.Interfaces.Services;
 using BookStoreMinimalApi.Domain.FiltrationEntities;
 using BookStoreMinimalApi.Domain.Entities;
-
+using AutoMapper.QueryableExtensions;
+using AutoMapper;
 namespace BookStoreMinimalApi.Application
 {
     public class BookService : IBookService
     {
         readonly IBookRepository _bookRepository;
-        public BookService(IBookRepository bookRepository)
+        readonly IMapper _mapper;
+        public BookService(IBookRepository bookRepository, IMapper mapper)
         {
             _bookRepository = bookRepository;
+            _mapper = mapper;
         }
 
         public async Task<Book> CreateBook(CreateBookDto bookDto)
@@ -45,17 +48,16 @@ namespace BookStoreMinimalApi.Application
 
         public async Task<List<GetBookDTO>> GetAllBooks(Filtration filters)
         {
-            List<GetBookDTO> filteredBooks = await _bookRepository.ToListAsync(_bookRepository.GetAllBooks().
+            IQueryable<Book> filteredBooks = _bookRepository.GetAllBooks().
             OrderEntities(filters.OrderOptions, filters.FilterValue!).FilterEntities(filters.FilterOptions, filters.FilterValue!).
-            Paginate(filters.PageNum).Select(b =>
-            new GetBookDTO
-            {
-                BookId = b.BookId,
-                Title = b.Title,
-                Cost = b.Cost
-            }));
+            Paginate(filters.PageNum);
 
-            return filteredBooks;
+            List<GetBookDTO> mappedBooks = await _bookRepository.ToListAsync(
+                _mapper.ProjectTo<GetBookDTO>(filteredBooks)
+            );
+
+            return mappedBooks;
+          
         }
 
         public async Task<GetBookByIdDTO> GetBookById(int id)
@@ -66,13 +68,11 @@ namespace BookStoreMinimalApi.Application
                 throw new EntityNotFoundException("Book with such ID couldn't be found.");
             }
 
-            return new GetBookByIdDTO()
-            {
-                Description = requestedBook.Description,
-                Title = requestedBook.Title,
-                Cost = requestedBook.Cost,
-                AuthorName = requestedBook.Author.Name
-            };
+            GetBookByIdDTO mappedBook = _mapper.Map<GetBookByIdDTO>(requestedBook);
+
+            return mappedBook;
+
+           
 
         }
     }

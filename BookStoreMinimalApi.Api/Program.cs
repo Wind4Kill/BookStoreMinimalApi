@@ -1,9 +1,11 @@
 using System.Diagnostics;
+using System.Reflection;
 using BookStoreMinimalApi;
 using BookStoreMinimalApi.Application;
 using BookStoreMinimalApi.Application.Exceptions;
 using BookStoreMinimalApi.Data;
 using BookStoreMinimalApi.Data.Repositories;
+using BookStoreMinimalApi.Domain.DTOs;
 using BookStoreMinimalApi.Domain.Interfaces.Repositories;
 using BookStoreMinimalApi.Domain.Interfaces.Services;
 using BookStoreMinimalApi.Endpoints;
@@ -14,6 +16,10 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddProblemDetails();
+builder.Services.AddAutoMapper(cfg =>
+{
+      cfg.AddMaps(Assembly.Load("BookStoreMinimalApi.Domain"));
+});
 builder.Services.AddDbContext<ApplicationContext>(options =>
 {
       string? connectionString = builder.Configuration.GetConnectionString("PostgreConnectionString");
@@ -24,9 +30,9 @@ builder.Services.AddDbContext<ApplicationContext>(options =>
             options.LogTo((message) => Debug.WriteLine(message), LogLevel.Information).
             EnableSensitiveDataLogging().EnableDetailedErrors();
       }
-      if(builder.Environment.IsProduction())
+      if (builder.Environment.IsProduction())
       {
-            
+
       }
 });
 
