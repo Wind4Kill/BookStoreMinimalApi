@@ -18,7 +18,7 @@ namespace BookStoreMinimalApi.Data
 
         public bool IsDeleted { get; set; }
 
-        public required Author Author { get; set; }
+        public Author Author { get; set; } = null!;
 
         public int AuthorId { get; set; }
 

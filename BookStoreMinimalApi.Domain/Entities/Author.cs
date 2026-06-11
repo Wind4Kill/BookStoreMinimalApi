@@ -15,10 +15,20 @@ namespace BookStoreMinimalApi.Domain.Entities
 
         public ICollection<Book>? Books { get; set; }
         private DateTime _dateOfBirth;
-        public DateTime DateOfBirth
+
+        public int Years => CalculateAge(_dateOfBirth, DateTime.Now);
+        public void SetBirthDate(DateTime birthDate)
         {
-            get { return _dateOfBirth; }
-            set { _dateOfBirth = value; }
+            _dateOfBirth = birthDate;
         }
+        public static int CalculateAge(DateTime start, DateTime end)
+        {
+            return (end.Year - start.Year - 1) +
+            (((end.Month > start.Month) ||
+            ((end.Month == start.Month)
+            && (end.Day >= start.Day)))
+            ? 1 : 0);
+        }
+
     }
 }
