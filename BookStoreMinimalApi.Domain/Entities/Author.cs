@@ -11,8 +11,14 @@ namespace BookStoreMinimalApi.Domain.Entities
         public int AuthorId { get; set; }
         public required string Name { get; set; }
 
-        public int PublishedBooks { get; set; }
+        public int PublishedBooksCount { get; set; }
 
         public ICollection<Book>? Books { get; set; }
+        private DateTime _dateOfBirth;
+        public DateTime DateOfBirth
+        {
+            get { return _dateOfBirth; }
+            set { _dateOfBirth = value; }
+        }
     }
 }

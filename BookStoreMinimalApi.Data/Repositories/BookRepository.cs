@@ -33,7 +33,7 @@ namespace BookStoreMinimalApi.Data.Repositories
 
         public IQueryable<Book> GetAllBooks()
         {
-            return _context.Books.AsNoTracking();
+            return _context.Books.AsNoTracking().Include(b=>b.Author);
         }
 
         public async Task<Book?> GetBookById(int id)

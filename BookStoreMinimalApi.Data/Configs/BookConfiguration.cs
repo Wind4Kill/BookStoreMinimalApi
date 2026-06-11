@@ -12,6 +12,10 @@ namespace BookStoreMinimalApi.Data.Configs
         public void Configure(EntityTypeBuilder<Book> builder)
         {
             builder.HasQueryFilter(b => b.IsDeleted == false);
+
+            builder.Property<DateTime>("CreatedAt").HasColumnType("date");
+            builder.Property<DateTime>("UpdatedAt").HasColumnType("date");
         }
+
     }
 }

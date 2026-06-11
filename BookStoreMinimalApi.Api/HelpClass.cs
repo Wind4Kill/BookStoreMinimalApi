@@ -26,7 +26,8 @@ namespace BookStoreMinimalApi
                         Description = "Book for C# pros",
                         Author=new Author()
                         {
-                            Name= "Anders Helsberg"
+                            Name= "Anders Helsberg",
+                            DateOfBirth = DateTime.Parse("16.01.2004")
                         }
                     },
                     new Book
@@ -36,7 +37,9 @@ namespace BookStoreMinimalApi
                         Description = "Java for mastery",
                         Author = new Author()
                         {
-                            Name= "James Gosling"
+                            Name= "James Gosling",
+                            DateOfBirth = DateTime.Parse("17.01.2004")
+
                         }
                     }
                 };
@@ -55,16 +58,14 @@ namespace BookStoreMinimalApi
             if (_context.Database.GetPendingMigrations().Any())
             {
                 try
-
                 {
-
+                    await _context.Database.MigrateAsync();
                 }
                 catch (Exception)
-
                 {
                     throw;
                 }
-                await _context.Database.MigrateAsync();
+
             }
         }
     }

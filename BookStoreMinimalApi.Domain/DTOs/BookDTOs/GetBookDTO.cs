@@ -13,5 +13,6 @@ namespace BookStoreMinimalApi.Domain.DTOs.BookDTOs
         public int BookId { get; set; }
         public required string Title { get; set; }
         public decimal Cost { get; set; }
+        public required string AuthorName { get; set; }
     }
 }
