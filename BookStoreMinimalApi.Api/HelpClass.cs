@@ -26,21 +26,19 @@ namespace BookStoreMinimalApi
                         Cost=1000,
                          Title="C# in details",
                         Description = "Book for C# pros",
-                        Author=new Author()
+                        Author=new Author(new DateTime(1960, 10, 15))
                         {
-                            Name= "Anders Helsberg",
-                            DateOfBirth = DateTime.Parse("16.01.2004")
-                        },
+                            Name= "Anders Helsberg"
+                        }
                     },
                     new Book
                     {
                         Cost=1500,
                         Title="Java advanced",
                         Description = "Java for mastery",
-                        Author = new Author()
+                        Author = new Author(new DateTime(1980, 11, 19))
                         {
-                            Name= "James Gosling",
-                            DateOfBirth = DateTime.Parse("17.01.2004")
+                            Name= "James Gosling"
                         },
                         Categories = new List<Category>(){category}
 

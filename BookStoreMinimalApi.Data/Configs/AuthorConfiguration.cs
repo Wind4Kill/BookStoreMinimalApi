@@ -12,7 +12,7 @@ namespace BookStoreMinimalApi.Data.Configs
     {
         public void Configure(EntityTypeBuilder<Author> builder)
         {
-            builder.Property(a => a.DateOfBirth).HasField("_dateOfBirth").HasColumnType("date");
+            builder.Property("_dateOfBirth").HasColumnName("DateOfBirth").HasColumnType("date");
         }
     }
 }

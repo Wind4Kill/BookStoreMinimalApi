@@ -34,7 +34,7 @@ namespace BookStoreMinimalApi.Data.Migrations
 
                     b.HasIndex("CategoriesCategoryId");
 
-                    b.ToTable("BookCategory");
+                    b.ToTable("BookCategory", (string)null);
                 });
 
             modelBuilder.Entity("BookStoreMinimalApi.Data.Book", b =>
@@ -72,7 +72,7 @@ namespace BookStoreMinimalApi.Data.Migrations
 
                     b.HasIndex("AuthorId");
 
-                    b.ToTable("Books");
+                    b.ToTable("Books", (string)null);
                 });
 
             modelBuilder.Entity("BookStoreMinimalApi.Domain.Entities.Author", b =>
@@ -95,7 +95,7 @@ namespace BookStoreMinimalApi.Data.Migrations
 
                     b.HasKey("AuthorId");
 
-                    b.ToTable("Authors");
+                    b.ToTable("Authors", (string)null);
                 });
 
             modelBuilder.Entity("BookStoreMinimalApi.Domain.Entities.Category", b =>
@@ -112,7 +112,7 @@ namespace BookStoreMinimalApi.Data.Migrations
 
                     b.HasKey("CategoryId");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("BookStoreMinimalApi.Domain.Entities.Review", b =>
@@ -136,7 +136,7 @@ namespace BookStoreMinimalApi.Data.Migrations
 
                     b.HasIndex("BookId");
 
-                    b.ToTable("Review");
+                    b.ToTable("Review", (string)null);
                 });
 
             modelBuilder.Entity("BookCategory", b =>

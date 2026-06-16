@@ -53,7 +53,7 @@ namespace BookStoreMinimalApi.Application
                 Title = bookDto.Title,
                 Description = bookDto.Description,
                 Cost = bookDto.Cost,
-                Author = checkAuthor ?? new Author { Name = bookDto.Author.Name },
+                Author = checkAuthor ?? new Author(bookDto.Author.DateOfBirth) { Name = bookDto.Author.Name },
                 Categories = bookCategories
             };
 

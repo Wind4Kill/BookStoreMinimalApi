@@ -15,10 +15,27 @@ namespace BookStoreMinimalApi.Domain.Entities
 
         public ICollection<Book>? Books { get; set; }
         private DateTime _dateOfBirth;
-        public DateTime DateOfBirth
+        public int Years => CalculateAge(_dateOfBirth);
+
+
+        public Author() { }
+
+        public Author(DateTime birthDay) : base()
         {
-            get { return _dateOfBirth; }
-            set { _dateOfBirth = value; }
+            _dateOfBirth = birthDay;
         }
+
+        public static int CalculateAge(DateTime birthDate)
+        {
+            var today = DateTime.Today;
+            int age = today.Year - birthDate.Year;
+
+            if (birthDate.AddYears(age) > today)
+                age--;
+
+            return age;
+        }
+
+
     }
 }
