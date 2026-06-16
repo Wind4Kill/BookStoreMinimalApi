@@ -16,6 +16,7 @@ namespace BookStoreMinimalApi.Domain.FiltrationEntities
             {
                 FilterOptions.None => books,
                 FilterOptions.ByCost => books.Where(b => b.Cost <= decimal.Parse(filterValue)),
+                FilterOptions.ByCategory => books.Where(b => b.Categories.Select(c => c.CategoryName).Contains(filterValue)),
                 _ => books
             };
         }

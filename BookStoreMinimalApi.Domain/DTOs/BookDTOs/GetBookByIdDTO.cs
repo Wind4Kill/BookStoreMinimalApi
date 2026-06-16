@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using BookStoreMinimalApi.Data;
+using BookStoreMinimalApi.Domain.DTOs.CategoryDTOs;
 
 namespace BookStoreMinimalApi.Domain.DTOs
 {
@@ -17,6 +18,8 @@ namespace BookStoreMinimalApi.Domain.DTOs
         public required string Description { get; set; }
 
         public required string AuthorName { get; set; }
+
+        public ICollection<CategoryDTO> Categories { get; set; } = null!;
 
     }
 }

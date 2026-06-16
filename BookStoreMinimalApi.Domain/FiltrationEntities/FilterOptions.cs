@@ -1,8 +1,9 @@
 namespace BookStoreMinimalApi.Domain.FiltrationEntities
 {
-    public enum FilterOptions
+    public enum FilterOptions:byte
     {
         None,
-        ByCost
+        ByCost,
+        ByCategory
     }
 }

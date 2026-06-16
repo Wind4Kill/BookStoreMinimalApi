@@ -3,6 +3,7 @@ using System;
 using BookStoreMinimalApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BookStoreMinimalApi.Data.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20260616161112_CategoriesAdded")]
+    partial class CategoriesAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,7 +37,7 @@ namespace BookStoreMinimalApi.Data.Migrations
 
                     b.HasIndex("CategoriesCategoryId");
 
-                    b.ToTable("BookCategory", (string)null);
+                    b.ToTable("BookCategory");
                 });
 
             modelBuilder.Entity("BookStoreMinimalApi.Data.Book", b =>
@@ -72,7 +75,7 @@ namespace BookStoreMinimalApi.Data.Migrations
 
                     b.HasIndex("AuthorId");
 
-                    b.ToTable("Books", (string)null);
+                    b.ToTable("Books");
                 });
 
             modelBuilder.Entity("BookStoreMinimalApi.Domain.Entities.Author", b =>
@@ -83,6 +86,9 @@ namespace BookStoreMinimalApi.Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("AuthorId"));
 
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("date");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -90,13 +96,9 @@ namespace BookStoreMinimalApi.Data.Migrations
                     b.Property<int>("PublishedBooksCount")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("_dateOfBirth")
-                        .HasColumnType("date")
-                        .HasColumnName("DateOfBirth");
-
                     b.HasKey("AuthorId");
 
-                    b.ToTable("Authors", (string)null);
+                    b.ToTable("Authors");
                 });
 
             modelBuilder.Entity("BookStoreMinimalApi.Domain.Entities.Category", b =>
@@ -113,31 +115,7 @@ namespace BookStoreMinimalApi.Data.Migrations
 
                     b.HasKey("CategoryId");
 
-                    b.ToTable("Categories", (string)null);
-                });
-
-            modelBuilder.Entity("BookStoreMinimalApi.Domain.Entities.Review", b =>
-                {
-                    b.Property<int>("ReviewId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ReviewId"));
-
-                    b.Property<int>("BookId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text");
-
-                    b.Property<double>("Rating")
-                        .HasColumnType("double precision");
-
-                    b.HasKey("ReviewId");
-
-                    b.HasIndex("BookId");
-
-                    b.ToTable("Review", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("BookCategory", b =>
@@ -164,20 +142,6 @@ namespace BookStoreMinimalApi.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Author");
-                });
-
-            modelBuilder.Entity("BookStoreMinimalApi.Domain.Entities.Review", b =>
-                {
-                    b.HasOne("BookStoreMinimalApi.Data.Book", null)
-                        .WithMany("Reviews")
-                        .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("BookStoreMinimalApi.Data.Book", b =>
-                {
-                    b.Navigation("Reviews");
                 });
 
             modelBuilder.Entity("BookStoreMinimalApi.Domain.Entities.Author", b =>

@@ -17,33 +17,33 @@ namespace BookStoreMinimalApi
             ApplicationContext _context = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
             if (!_context.Books.Any())
             {
-                List<Book> addedBooks = new List<Book>();
-                Book book1 = new Book
+               Category category = new Category { CategoryName = "Programming" };
+                List<Book> addedBooks = new List<Book>()
                 {
-                    Cost = 1000,
-                    Title = "C# in details",
-                    Description = "Book for C# pros"
-                };
+                    new Book
+                    {
+                        Categories = new List<Category>() {category},
+                        Cost=1000,
+                         Title="C# in details",
+                        Description = "Book for C# pros",
+                        Author=new Author(new DateTime(1960, 10, 15))
+                        {
+                            Name= "Anders Helsberg"
+                        }
+                    },
+                    new Book
+                    {
+                        Cost=1500,
+                        Title="Java advanced",
+                        Description = "Java for mastery",
+                        Author = new Author(new DateTime(1980, 11, 19))
+                        {
+                            Name= "James Gosling"
+                        },
+                        Categories = new List<Category>(){category}
 
-                Author author1 = new Author()
-                {
-                    Name = "Anders Helsberg",
+                    }
                 };
-                author1.SetBirthDate(DateTime.Parse("16.01.2004"));
-                book1.Author = author1;
-
-                Book book2 = new Book
-                {
-                    Cost = 1500,
-                    Title = "Java advanced",
-                    Description = "Java for mastery"
-                };
-                Author author2 = new Author()
-                {
-                    Name = "James Gosling"
-                };
-                author2.SetBirthDate(DateTime.Parse("17.01.2004"));
-                book2.Author = author2;
                 _context.AddRange(addedBooks);
                 await _context.SaveChangesAsync();
             }
