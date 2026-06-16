@@ -27,7 +27,7 @@ namespace BookStoreMinimalApi.Application
         public async Task<Book> CreateBook(CreateBookDto bookDto)
         {
             List<Category> bookCategories = new List<Category>();
-            string[] categoriesNames = bookDto.Categories.Select(c => c.Name).ToArray();
+            string[] categoriesNames = bookDto.Categories.Select(c => c.CategoryName).ToArray();
 
             Author? checkAuthor = await _authorRepository.GetAuthorByName(bookDto.Author.Name);
             List<Category>? checkCategories = await _categoryRepository.GetCategoriesByName(categoriesNames);
