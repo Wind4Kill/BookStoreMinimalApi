@@ -20,6 +20,8 @@ namespace BookStoreMinimalApi.Data
 
         public required Author Author { get; set; }
 
+        public required ICollection<Category> Categories { get; set; }
+
         public int AuthorId { get; set; }
 
     }

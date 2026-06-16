@@ -17,10 +17,12 @@ namespace BookStoreMinimalApi
             ApplicationContext _context = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
             if (!_context.Books.Any())
             {
+                Category category = new Category { CategoryName = "Programming" };
                 List<Book> addedBooks = new List<Book>()
                 {
                     new Book
                     {
+                        Categories = new List<Category>() {category},
                         Cost=1000,
                          Title="C# in details",
                         Description = "Book for C# pros",
@@ -28,7 +30,7 @@ namespace BookStoreMinimalApi
                         {
                             Name= "Anders Helsberg",
                             DateOfBirth = DateTime.Parse("16.01.2004")
-                        }
+                        },
                     },
                     new Book
                     {
@@ -39,8 +41,9 @@ namespace BookStoreMinimalApi
                         {
                             Name= "James Gosling",
                             DateOfBirth = DateTime.Parse("17.01.2004")
+                        },
+                        Categories = new List<Category>(){category}
 
-                        }
                     }
                 };
                 _context.AddRange(addedBooks);

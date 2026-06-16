@@ -12,22 +12,49 @@ namespace BookStoreMinimalApi.Application
 {
     public class BookService : IBookService
     {
+        IAuthorRepository _authorRepository;
         readonly IBookRepository _bookRepository;
+        readonly ICategoryRepository _categoryRepository;
         readonly IMapper _mapper;
-        public BookService(IBookRepository bookRepository, IMapper mapper)
+        public BookService(IBookRepository bookRepository, IAuthorRepository authorRepository, ICategoryRepository categoryRepository, IMapper mapper)
         {
             _bookRepository = bookRepository;
+            _authorRepository = authorRepository;
+            _categoryRepository = categoryRepository;
             _mapper = mapper;
         }
 
         public async Task<Book> CreateBook(CreateBookDto bookDto)
         {
+            List<Category> bookCategories = new List<Category>();
+            string[] categoriesNames = bookDto.Categories.Select(c => c.Name).ToArray();
+
+            Author? checkAuthor = await _authorRepository.GetAuthorByName(bookDto.Author.Name);
+            List<Category>? checkCategories = await _categoryRepository.GetCategoriesByName(categoriesNames);
+            if (checkCategories is not null)
+            {
+                string[]? absentCategoryNames = categoriesNames.Except(checkCategories?.Select(c => c.CategoryName).ToArray()!).ToArray();
+                foreach (string category in absentCategoryNames)
+                {
+                    bookCategories.Add(new Category { CategoryName = category });
+                }
+                bookCategories.AddRange(checkCategories!);
+            }
+            else
+            {
+                foreach (string category in categoriesNames)
+                {
+                    bookCategories.Add(new Category { CategoryName = category });
+                }
+            }
+
             Book createdBook = new Book()
             {
                 Title = bookDto.Title,
                 Description = bookDto.Description,
                 Cost = bookDto.Cost,
-                Author = new Author { Name = bookDto.Author.Name }
+                Author = checkAuthor ?? new Author { Name = bookDto.Author.Name },
+                Categories = bookCategories
             };
 
             return await _bookRepository.AddBook(createdBook);
@@ -57,7 +84,7 @@ namespace BookStoreMinimalApi.Application
             );
 
             return mappedBooks;
-          
+
         }
 
         public async Task<GetBookByIdDTO> GetBookById(int id)
@@ -72,7 +99,7 @@ namespace BookStoreMinimalApi.Application
 
             return mappedBook;
 
-           
+
 
         }
     }

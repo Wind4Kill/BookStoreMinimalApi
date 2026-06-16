@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using BookStoreMinimalApi.Domain.DTOs.AuthorDTOs;
+using BookStoreMinimalApi.Domain.DTOs.CategoryDTOs;
 
 namespace BookStoreMinimalApi.Domain.DTOs.BookDTOs
 {
@@ -20,5 +21,8 @@ namespace BookStoreMinimalApi.Domain.DTOs.BookDTOs
 
         [Required]
         public required CreateAuthorDto Author { get; set; }
+
+        [Required] 
+        public required List<CategoryDTO> Categories { get; set; }
     }
 }

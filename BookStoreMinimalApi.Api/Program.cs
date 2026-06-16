@@ -30,14 +30,12 @@ builder.Services.AddDbContext<ApplicationContext>(options =>
             options.LogTo((message) => Debug.WriteLine(message), LogLevel.Information).
             EnableSensitiveDataLogging().EnableDetailedErrors();
       }
-      if (builder.Environment.IsProduction())
-      {
-
-      }
 });
 
 builder.Services.AddScoped<IBookRepository, BookRepository>();
 builder.Services.AddScoped<IBookService, BookService>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
 
 
 if (builder.Environment.IsDevelopment())
