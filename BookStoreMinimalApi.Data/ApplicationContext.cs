@@ -20,7 +20,7 @@ public class ApplicationContext : DbContext
 
       public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
       {
-            var bookEntities = ChangeTracker.Entries<Book>();
+            var bookEntities = ChangeTracker.Entries<Book>().Where(e=>e.State==EntityState.Added||e.State==EntityState.Modified);
             foreach (var entity in bookEntities)
             {
                   if (entity.State == EntityState.Added)
