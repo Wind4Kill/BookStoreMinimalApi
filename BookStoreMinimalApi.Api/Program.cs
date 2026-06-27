@@ -1,13 +1,8 @@
 using System.Diagnostics;
 using System.Reflection;
 using BookStoreMinimalApi;
-using BookStoreMinimalApi.Application;
 using BookStoreMinimalApi.Application.Exceptions;
 using BookStoreMinimalApi.Data;
-using BookStoreMinimalApi.Data.Repositories;
-using BookStoreMinimalApi.Domain.DTOs;
-using BookStoreMinimalApi.Domain.Interfaces.Repositories;
-using BookStoreMinimalApi.Domain.Interfaces.Services;
 using BookStoreMinimalApi.Endpoints;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
@@ -32,10 +27,7 @@ builder.Services.AddDbContext<ApplicationContext>(options =>
       }
 });
 
-builder.Services.AddScoped<IBookRepository, BookRepository>();
-builder.Services.AddScoped<IBookService, BookService>();
-builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
+builder.Services.AddServices();
 
 
 if (builder.Environment.IsDevelopment())
@@ -47,7 +39,6 @@ if (builder.Environment.IsDevelopment())
 
 var app = builder.Build();
 
-app.UseStatusCodePages();
 if (app.Environment.IsProduction())
 {
       app.UseExceptionHandler(errorApp =>
@@ -84,6 +75,7 @@ if (app.Environment.IsProduction())
 
 }
 
+app.UseStatusCodePages();
 if (app.Environment.IsDevelopment())
 {
       await app.SeedData();
