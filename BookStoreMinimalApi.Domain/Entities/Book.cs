@@ -22,7 +22,7 @@ namespace BookStoreMinimalApi.Data
 
         public required ICollection<Category> Categories { get; set; }
 
-        public ICollection<Review> Reviews { get; set; } = null!;
+        public ICollection<Review>? Reviews { get; set; }
 
         public int AuthorId { get; set; }
 

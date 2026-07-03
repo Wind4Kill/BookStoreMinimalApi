@@ -83,16 +83,15 @@ namespace BookStoreMinimalApi.Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("AuthorId"));
 
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("date");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("PublishedBooksCount")
                         .HasColumnType("integer");
-
-                    b.Property<DateTime>("_dateOfBirth")
-                        .HasColumnType("date")
-                        .HasColumnName("DateOfBirth");
 
                     b.HasKey("AuthorId");
 
