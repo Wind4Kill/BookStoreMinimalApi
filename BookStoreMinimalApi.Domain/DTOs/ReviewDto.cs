@@ -8,11 +8,9 @@ using BookStoreMinimalApi.Domain.Entities;
 
 namespace BookStoreMinimalApi.Domain.DTOs
 {
-    [AutoMap(typeof(Review))]
+    [AutoMap(typeof(Review), ReverseMap = true)]
     public class ReviewDto
     {
-        [Required]
-        public int BookId { get; set; }
         [Required]
         public double Rating { get; set; }
         public string? Description { get; set; }

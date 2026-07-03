@@ -8,6 +8,6 @@ namespace BookStoreMinimalApi.Domain.Interfaces.Services
 {
     public interface IReviewService
     {
-        Task<int> AddReview(ReviewDto reviewDto);
+        Task<int> AddReview(int bookId, ReviewDto reviewDto);
     }
 }

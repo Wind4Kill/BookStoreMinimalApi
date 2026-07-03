@@ -4,6 +4,7 @@ using BookStoreMinimalApi.Domain.DTOs;
 using BookStoreMinimalApi.Domain.DTOs.BookDTOs;
 using BookStoreMinimalApi.Domain.FiltrationEntities;
 using BookStoreMinimalApi.Domain.Interfaces.Services;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace BookStoreMinimalApi.Endpoints
 {
@@ -52,9 +53,16 @@ namespace BookStoreMinimalApi.Endpoints
                 return Results.Created(link, createdBook);
             }).WithParameterValidation().Produces(201);
 
+            bookEndpoints.MapPost("{id:int}/reviews", async (int id, IReviewService reviewService, ReviewDto reviewDto) =>
+            {
+                await reviewService.AddReview(id, reviewDto);
+                return Results.Ok();
+
+            });
+
             bookEndpoints.MapDelete("/{id:int}", async (int id, IBookService service) =>
             {
-                int affectedRows = await service.DeleteBook(id);
+                await service.DeleteBook(id);
                 return Results.NoContent();
             });
 
