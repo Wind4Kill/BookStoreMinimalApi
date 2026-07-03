@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookStoreMinimalApi
 {
-    public static class HelpClass
+    public static class DBExtensions
     {
         public async static Task SeedData(this WebApplication app)
         {
