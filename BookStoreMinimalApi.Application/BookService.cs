@@ -12,23 +12,23 @@ namespace BookStoreMinimalApi.Application
 {
     public class BookService : IBookService
     {
-        readonly IAuthorRepository _authorRepository;
+        readonly IAuthorService _authorService;
         readonly IBookRepository _bookRepository;
         readonly ICategoryService _categoryService;
         readonly IMapper _mapper;
-        public BookService(IBookRepository bookRepository, IAuthorRepository authorRepository, ICategoryService categoryService, IMapper mapper)
+        public BookService(IBookRepository bookRepository, IAuthorService authorService, ICategoryService categoryService, IMapper mapper)
         {
             _bookRepository = bookRepository;
-            _authorRepository = authorRepository;
+            _authorService = authorService;
             _categoryService = categoryService;
             _mapper = mapper;
         }
 
         public async Task<Book> CreateBook(CreateBookDto bookDto)
         {
-            Author? checkAuthor = await _authorRepository.GetAuthorByName(bookDto.Author.Name);
+            Author? checkAuthor = await _authorService.CheckExistingAuthor(bookDto.Author.Name);
 
-            var bookCategories = await _categoryService.CheckExistingCategories(bookDto);
+            var bookCategories = await _categoryService.CheckExistingCategories(bookDto.Categories.Select(c => c.CategoryName).ToArray());
 
             Book createdBook = new Book()
             {

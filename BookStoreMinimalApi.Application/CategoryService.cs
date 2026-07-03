@@ -17,10 +17,9 @@ namespace BookStoreMinimalApi.Application
             {
                   _categoryRepository = categoryRepository;
             }
-            public async Task<List<Category>> CheckExistingCategories(CreateBookDto bookDto)
+            public async Task<List<Category>> CheckExistingCategories(string[] categoriesNames)
             {
                   List<Category> bookCategories = new List<Category>();
-                  string[] categoriesNames = bookDto.Categories.Select(c => c.CategoryName).ToArray();
                   List<Category>? checkCategories = await _categoryRepository.GetCategoriesByName(categoriesNames);
 
                   if (checkCategories is not null)

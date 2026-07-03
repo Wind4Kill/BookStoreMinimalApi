@@ -14,12 +14,14 @@ namespace BookStoreMinimalApi
          public static IServiceCollection AddServices(this IServiceCollection services)
         {
             services.AddScoped<IBookService, BookService>();
-            services.AddScoped<IReviewService, ReviewService>();
-            services.AddScoped<IAuthorRepository, AuthorRepository>();
             services.AddScoped<IBookRepository, BookRepository>();
-            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IReviewService, ReviewService>();
             services.AddScoped<IReviewRepository, ReviewRepository>();
+            services.AddScoped<IAuthorRepository, AuthorRepository>();
+            services.AddScoped<IAuthorService, AuthorService>();
             services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+
 
             return services;
         }
