@@ -1,9 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
+using BookStoreMinimalApi.Application;
 using BookStoreMinimalApi.Data;
+using BookStoreMinimalApi.Data.Repositories;
 using BookStoreMinimalApi.Domain.Entities;
+using BookStoreMinimalApi.Domain.Interfaces.Repositories;
+using BookStoreMinimalApi.Domain.Interfaces.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookStoreMinimalApi
@@ -17,7 +18,7 @@ namespace BookStoreMinimalApi
             ApplicationContext _context = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
             if (!_context.Books.Any())
             {
-               Category category = new Category { CategoryName = "Programming" };
+                Category category = new Category { CategoryName = "Programming" };
                 List<Book> addedBooks = new List<Book>()
                 {
                     new Book
@@ -68,6 +69,16 @@ namespace BookStoreMinimalApi
                 }
 
             }
+        }
+
+        public static IServiceCollection AddServices(this IServiceCollection services)
+        {
+            services.AddScoped<IBookRepository, BookRepository>();
+            services.AddScoped<IBookService, BookService>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IAuthorRepository, AuthorRepository>();
+
+            return services;
         }
     }
 }
