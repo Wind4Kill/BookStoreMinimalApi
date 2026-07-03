@@ -19,6 +19,7 @@ namespace BookStoreMinimalApi
             services.AddScoped<IBookRepository, BookRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IReviewRepository, ReviewRepository>();
+            services.AddScoped<ICategoryService, CategoryService>();
 
             return services;
         }

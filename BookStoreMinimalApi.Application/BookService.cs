@@ -12,41 +12,23 @@ namespace BookStoreMinimalApi.Application
 {
     public class BookService : IBookService
     {
-        IAuthorRepository _authorRepository;
+        readonly IAuthorRepository _authorRepository;
         readonly IBookRepository _bookRepository;
-        readonly ICategoryRepository _categoryRepository;
+        readonly ICategoryService _categoryService;
         readonly IMapper _mapper;
-        public BookService(IBookRepository bookRepository, IAuthorRepository authorRepository, ICategoryRepository categoryRepository, IMapper mapper)
+        public BookService(IBookRepository bookRepository, IAuthorRepository authorRepository, ICategoryService categoryService, IMapper mapper)
         {
             _bookRepository = bookRepository;
             _authorRepository = authorRepository;
-            _categoryRepository = categoryRepository;
+            _categoryService = categoryService;
             _mapper = mapper;
         }
 
         public async Task<Book> CreateBook(CreateBookDto bookDto)
         {
-            List<Category> bookCategories = new List<Category>();
-            string[] categoriesNames = bookDto.Categories.Select(c => c.CategoryName).ToArray();
-
             Author? checkAuthor = await _authorRepository.GetAuthorByName(bookDto.Author.Name);
-            List<Category>? checkCategories = await _categoryRepository.GetCategoriesByName(categoriesNames);
-            if (checkCategories is not null)
-            {
-                string[]? absentCategoryNames = categoriesNames.Except(checkCategories?.Select(c => c.CategoryName).ToArray()!).ToArray();
-                foreach (string category in absentCategoryNames)
-                {
-                    bookCategories.Add(new Category { CategoryName = category });
-                }
-                bookCategories.AddRange(checkCategories!);
-            }
-            else
-            {
-                foreach (string category in categoriesNames)
-                {
-                    bookCategories.Add(new Category { CategoryName = category });
-                }
-            }
+
+            var bookCategories = await _categoryService.CheckExistingCategories(bookDto);
 
             Book createdBook = new Book()
             {
@@ -76,7 +58,8 @@ namespace BookStoreMinimalApi.Application
         public async Task<List<GetBookDTO>> GetAllBooks(Filtration filters)
         {
             IQueryable<Book> filteredBooks = _bookRepository.GetAllBooks().
-            OrderEntities(filters.OrderOptions, filters.FilterValue!).FilterEntities(filters.FilterOptions, filters.FilterValue!).
+            OrderEntities(filters.OrderOptions, filters.FilterValue!).
+            FilterEntities(filters.FilterOptions, filters.FilterValue!).
             Paginate(filters.PageNum);
 
             List<GetBookDTO> mappedBooks = await _bookRepository.ToListAsync(
@@ -98,9 +81,6 @@ namespace BookStoreMinimalApi.Application
             GetBookByIdDTO mappedBook = _mapper.Map<GetBookByIdDTO>(requestedBook);
 
             return mappedBook;
-
-
-
         }
     }
 }
