@@ -44,15 +44,13 @@ namespace BookStoreMinimalApi.Application
 
         public async Task<int> DeleteBook(int id)
         {
-            try
+            Book? requestedBook = await _bookRepository.GetBookById(id);
+            if (requestedBook is null)
             {
-                int affectedRows = await _bookRepository.DeleteBook(id);
-                return affectedRows;
+                throw new EntityNotFoundException("Book with such ID wasn't found and can't be deleted.");
             }
-            catch (Exception ex)
-            {
-                throw new EntityNotFoundException("Book with such ID wasn't found and can't be deleted.", ex);
-            }
+            int affectedRows = await _bookRepository.DeleteBook(id);
+            return affectedRows;
         }
 
         public async Task<List<GetBookDTO>> GetAllBooks(Filtration filters)
