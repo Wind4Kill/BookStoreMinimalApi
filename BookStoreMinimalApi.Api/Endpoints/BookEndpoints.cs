@@ -1,3 +1,4 @@
+using System.Globalization;
 using BookStoreMinimalApi.Application;
 using BookStoreMinimalApi.Data;
 using BookStoreMinimalApi.Domain.DTOs;
@@ -60,9 +61,15 @@ namespace BookStoreMinimalApi.Endpoints
 
             });
 
-            bookEndpoints.MapDelete("/{id:int}", async (int id, IBookService service) =>
+            bookEndpoints.MapDelete("{id:int}", async (int id, IBookService service) =>
             {
                 await service.DeleteBook(id);
+                return Results.NoContent();
+            });
+
+            bookEndpoints.MapPut("{id:int}", async (int id, ChangeBookDto changeBookDto, IBookService service) =>
+            {
+                await service.UpdateBook(id, changeBookDto);
                 return Results.NoContent();
             });
 
