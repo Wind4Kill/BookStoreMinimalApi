@@ -48,5 +48,10 @@ namespace BookStoreMinimalApi.Data.Repositories
         {
             return await query.ToListAsync();
         }
+
+        public async Task<int> UpdateBook()
+        {
+           return await _context.SaveChangesAsync();
+        }
     }
 }
