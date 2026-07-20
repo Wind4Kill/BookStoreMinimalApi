@@ -49,7 +49,7 @@ namespace BookStoreMinimalApi.Endpoints
             bookEndpoints.MapPost("", async (CreateBookDto bookDto, IBookService service, LinkGenerator linkGenerator) =>
             {
                 Book createdBook = await service.CreateBook(bookDto);
-                string? link = linkGenerator.GetPathByName("GetBookById", new LinkOptions() { LowercaseUrls = true });
+                string? link = linkGenerator.GetPathByName(endpointName: "GetBookById", new { id = createdBook.BookId }, options: new LinkOptions() { LowercaseUrls = true });
                 return Results.Created(link, createdBook);
             }).WithParameterValidation().Produces(201);
 
