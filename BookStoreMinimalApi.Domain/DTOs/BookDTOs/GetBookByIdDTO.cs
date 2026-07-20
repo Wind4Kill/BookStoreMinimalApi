@@ -12,6 +12,7 @@ namespace BookStoreMinimalApi.Domain.DTOs
     [AutoMap(typeof(Book))]
     public class GetBookByIdDTO
     {
+        public int BookId { get; set; }
         public required string Title { get; set; }
 
         public decimal Cost { get; set; }
