@@ -18,6 +18,8 @@ namespace BookStoreMinimalApi.Domain.Interfaces.Services
         Task<Book> CreateBook(CreateBookDto bookDto);
 
         Task<int> DeleteBook(int id);
+
+        Task<int> UpdateBook(int id, ChangeBookDto changeBook);
         
         
     }
