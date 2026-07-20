@@ -14,6 +14,7 @@ namespace BookStoreMinimalApi.Domain.DTOs.BookDTOs
         public required string Title { get; set; }
 
         [Required]
+        [StringLength(200)]
         public required string Description { get; set; }
 
         [Required]
