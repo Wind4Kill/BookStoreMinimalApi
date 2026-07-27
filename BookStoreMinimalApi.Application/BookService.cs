@@ -44,11 +44,7 @@ namespace BookStoreMinimalApi.Application
 
         public async Task<int> DeleteBook(int id)
         {
-            Book? requestedBook = await _bookRepository.GetBookById(id);
-            if (requestedBook is null)
-            {
-                throw new EntityNotFoundException("Book with such ID wasn't found and can't be deleted.");
-            }
+            Book requestedBook = await CheckIfBookExistsOrThrowException(id);
             int affectedRows = await _bookRepository.DeleteBook(id);
             return affectedRows;
         }
@@ -70,11 +66,7 @@ namespace BookStoreMinimalApi.Application
 
         public async Task<GetBookByIdDTO> GetBookById(int id)
         {
-            Book? requestedBook = await _bookRepository.GetBookById(id);
-            if (requestedBook is null)
-            {
-                throw new EntityNotFoundException("Book with such ID couldn't be found.");
-            }
+            Book requestedBook = await CheckIfBookExistsOrThrowException(id);
 
             GetBookByIdDTO mappedBook = _mapper.Map<GetBookByIdDTO>(requestedBook);
 
@@ -83,11 +75,7 @@ namespace BookStoreMinimalApi.Application
 
         public async Task<int> UpdateBook(int id, ChangeBookDto changeBook, IValidator<ChangeBookDto> validator)
         {
-            Book? requestedBook = await _bookRepository.GetBookById(id);
-            if (requestedBook is null)
-            {
-                throw new EntityNotFoundException("Book with such ID wasn't found.");
-            }
+            Book requestedBook = await CheckIfBookExistsOrThrowException(id);
 
             Dictionary<string, string> validatedValues = validator.Validate(changeBook);
 
@@ -108,6 +96,16 @@ namespace BookStoreMinimalApi.Application
             }
 
             return await _bookRepository.UpdateBook();
+        }
+
+        private async Task<Book> CheckIfBookExistsOrThrowException(int id)
+        {
+            Book? requestedBook = await _bookRepository.GetBookById(id);
+            if (requestedBook is null)
+            {
+                throw new EntityNotFoundException("Book with such ID wasn't found.");
+            }
+            return requestedBook;
         }
 
     }
