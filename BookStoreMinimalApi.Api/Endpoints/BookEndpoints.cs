@@ -67,9 +67,9 @@ namespace BookStoreMinimalApi.Endpoints
                 return Results.NoContent();
             });
 
-            bookEndpoints.MapPut("{id:int}", async (int id, ChangeBookDto changeBookDto, IBookService service) =>
+            bookEndpoints.MapPut("{id:int}", async (int id, ChangeBookDto changeBookDto, IBookService service, ChangeBookValidator validator) =>
             {
-                await service.UpdateBook(id, changeBookDto);
+                await service.UpdateBook(id, changeBookDto, validator);
                 return Results.NoContent();
             });
 

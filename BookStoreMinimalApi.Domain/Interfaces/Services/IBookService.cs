@@ -6,6 +6,7 @@ using BookStoreMinimalApi.Domain.FiltrationEntities;
 using BookStoreMinimalApi.Data;
 using BookStoreMinimalApi.Domain.DTOs;
 using BookStoreMinimalApi.Domain.DTOs.BookDTOs;
+using BookStoreMinimalApi.Domain.Interfaces.Repositories;
 
 namespace BookStoreMinimalApi.Domain.Interfaces.Services
 {
@@ -19,7 +20,7 @@ namespace BookStoreMinimalApi.Domain.Interfaces.Services
 
         Task<int> DeleteBook(int id);
 
-        Task<int> UpdateBook(int id, ChangeBookDto changeBook);
+        public Task<int> UpdateBook(int id, ChangeBookDto changeBook, IValidator<ChangeBookDto> validator);
         
         
     }

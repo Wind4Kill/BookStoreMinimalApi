@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BookStoreMinimalApi.Application;
 using BookStoreMinimalApi.Data.Repositories;
+using BookStoreMinimalApi.Domain.DTOs.BookDTOs;
 using BookStoreMinimalApi.Domain.Interfaces.Repositories;
 using BookStoreMinimalApi.Domain.Interfaces.Services;
 
@@ -21,6 +22,7 @@ namespace BookStoreMinimalApi
             services.AddScoped<IAuthorService, AuthorService>();
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped(typeof(IValidator<ChangeBookDto>), typeof(ChangeBookValidator));
 
 
             return services;
