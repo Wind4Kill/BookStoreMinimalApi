@@ -6,9 +6,8 @@ using BookStoreMinimalApi.Domain.Interfaces.Repositories;
 using BookStoreMinimalApi.Domain.Interfaces.Services;
 using BookStoreMinimalApi.Domain.FiltrationEntities;
 using BookStoreMinimalApi.Domain.Entities;
-using AutoMapper.QueryableExtensions;
 using AutoMapper;
-using System.Reflection;
+using BookStoreMinimalApi.Domain.Interfaces;
 namespace BookStoreMinimalApi.Application
 {
     public class BookService : IBookService
@@ -94,7 +93,7 @@ namespace BookStoreMinimalApi.Application
 
             if (validatedValues.Count > 0)
             {
-                Type changeBookType = typeof(ChangeBookDto);
+                Type changeBookType = typeof(Book);
                 string[] propertyNames = changeBookType.GetProperties().Select(p => p.Name).ToArray();
 
                 foreach (KeyValuePair<string, string> pair in validatedValues)
@@ -102,7 +101,7 @@ namespace BookStoreMinimalApi.Application
 
                     if (propertyNames.Contains(pair.Key))
                     {
-                        var requestedBookProperty = changeBook.GetType().GetProperty(pair.Key);
+                        var requestedBookProperty = requestedBook.GetType().GetProperty(pair.Key);
                         requestedBookProperty!.SetValue(requestedBook, pair.Value);
                     }
                 }

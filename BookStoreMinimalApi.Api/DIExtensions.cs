@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using BookStoreMinimalApi.Application;
 using BookStoreMinimalApi.Data.Repositories;
 using BookStoreMinimalApi.Domain.DTOs.BookDTOs;
+using BookStoreMinimalApi.Domain.Interfaces;
 using BookStoreMinimalApi.Domain.Interfaces.Repositories;
 using BookStoreMinimalApi.Domain.Interfaces.Services;
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BookStoreMinimalApi.Domain.Interfaces.Repositories
+namespace BookStoreMinimalApi.Domain.Interfaces
 {
     public interface IValidator<T>
     {

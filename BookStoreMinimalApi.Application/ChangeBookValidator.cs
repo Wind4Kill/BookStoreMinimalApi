@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BookStoreMinimalApi.Data;
 using BookStoreMinimalApi.Domain.DTOs.BookDTOs;
-using BookStoreMinimalApi.Domain.Interfaces.Repositories;
+using BookStoreMinimalApi.Domain.Interfaces;
 
 namespace BookStoreMinimalApi.Application
 {
