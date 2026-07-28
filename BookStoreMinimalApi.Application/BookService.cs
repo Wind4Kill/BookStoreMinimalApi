@@ -73,27 +73,29 @@ namespace BookStoreMinimalApi.Application
             return mappedBook;
         }
 
-        public async Task<int> UpdateBook(int id, ChangeBookDto changeBook, IValidator<ChangeBookDto> validator)
+        public async Task<int> UpdateBook(int id, ChangeBookDto changeBook)
         {
             Book requestedBook = await CheckIfBookExistsOrThrowException(id);
 
-            Dictionary<string, string> validatedValues = validator.Validate(changeBook);
+            // Dictionary<string, string> validatedValues = validator.Validate(changeBook);
 
-            if (validatedValues.Count > 0)
-            {
-                Type changeBookType = typeof(Book);
-                string[] propertyNames = changeBookType.GetProperties().Select(p => p.Name).ToArray();
+            // if (validatedValues.Count > 0)
+            // {
+            //     Type changeBookType = typeof(Book);
+            //     string[] propertyNames = changeBookType.GetProperties().Select(p => p.Name).ToArray();
 
-                foreach (KeyValuePair<string, string> pair in validatedValues)
-                {
+            //     foreach (KeyValuePair<string, string> pair in validatedValues)
+            //     {
 
-                    if (propertyNames.Contains(pair.Key))
-                    {
-                        var requestedBookProperty = requestedBook.GetType().GetProperty(pair.Key);
-                        requestedBookProperty!.SetValue(requestedBook, pair.Value);
-                    }
-                }
-            }
+            //         if (propertyNames.Contains(pair.Key))
+            //         {
+            //             var requestedBookProperty = requestedBook.GetType().GetProperty(pair.Key);
+            //             requestedBookProperty!.SetValue(requestedBook, pair.Value);
+            //         }
+            //     }
+            // }
+
+            _mapper.Map(changeBook, requestedBook);
 
             return await _bookRepository.UpdateBook();
         }

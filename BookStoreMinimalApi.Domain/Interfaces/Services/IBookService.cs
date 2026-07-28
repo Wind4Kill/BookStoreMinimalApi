@@ -20,7 +20,7 @@ namespace BookStoreMinimalApi.Domain.Interfaces.Services
 
         Task<int> DeleteBook(int id);
 
-        public Task<int> UpdateBook(int id, ChangeBookDto changeBook, IValidator<ChangeBookDto> validator);
+        public Task<int> UpdateBook(int id, ChangeBookDto changeBook);
         
         
     }

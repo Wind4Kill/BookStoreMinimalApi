@@ -23,7 +23,6 @@ namespace BookStoreMinimalApi
             services.AddScoped<IAuthorService, AuthorService>();
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
-            services.AddScoped(typeof(IValidator<ChangeBookDto>), typeof(ChangeBookValidator));
 
 
             return services;
