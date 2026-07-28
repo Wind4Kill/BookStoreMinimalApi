@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BookStoreMinimalApi.Api.Endpoints;
 using BookStoreMinimalApi.Application;
 using BookStoreMinimalApi.Data.Repositories;
 using BookStoreMinimalApi.Domain.DTOs.BookDTOs;
@@ -23,6 +24,7 @@ namespace BookStoreMinimalApi
             services.AddScoped<IAuthorService, AuthorService>();
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddSingleton<CustomMemoryCache>();
 
 
             return services;

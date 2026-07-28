@@ -1,12 +1,8 @@
-using System.Globalization;
-using BookStoreMinimalApi.Application;
 using BookStoreMinimalApi.Data;
 using BookStoreMinimalApi.Domain.DTOs;
 using BookStoreMinimalApi.Domain.DTOs.BookDTOs;
 using BookStoreMinimalApi.Domain.FiltrationEntities;
-using BookStoreMinimalApi.Domain.Interfaces;
 using BookStoreMinimalApi.Domain.Interfaces.Services;
-using Microsoft.AspNetCore.Http.Features;
 
 namespace BookStoreMinimalApi.Endpoints
 {
