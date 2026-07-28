@@ -99,7 +99,7 @@ namespace BookStoreMinimalApi.Application
 
             int result = await _bookRepository.UpdateBook();
 
-            string key = $"Book_id{id}";
+            string key = $"Book_{id}";
 
             _cache.Cache.Remove(key);
 
