@@ -24,24 +24,27 @@ namespace BookStoreMinimalApi.Data.Repositories
             return book;
         }
 
-        public async Task<int> DeleteBook(int id)
+        public async Task<int> DeleteBook(Book book)
         {
-            Book requestedBook = await _context.Books.SingleAsync(b => b.BookId == id);
-            requestedBook.IsDeleted = true;
+            book.IsDeleted = true;
             return await _context.SaveChangesAsync();
         }
 
         public IQueryable<Book> GetAllBooks()
         {
-            return _context.Books.AsNoTracking().Include(b => b.Author).Include(b => b.Categories);
+            return _context.Books.AsSplitQuery()
+            .AsNoTracking()
+            .Include(b => b.Author)
+            .Include(b => b.Categories);
         }
 
         public async Task<Book?> GetBookById(int id)
         {
-            return _context.Books.Include(b => b.Author)
+            return await _context.Books
+            .Include(b => b.Author)
             .Include(b => b.Categories)
             .Include(b => b.Reviews)
-            .SingleOrDefault(b => b.BookId == id);
+            .SingleOrDefaultAsync(b => b.BookId == id);
         }
 
         public async Task<List<T>> ToListAsync<T>(IQueryable<T> query)
@@ -51,7 +54,7 @@ namespace BookStoreMinimalApi.Data.Repositories
 
         public async Task<int> UpdateBook()
         {
-           return await _context.SaveChangesAsync();
+            return await _context.SaveChangesAsync();
         }
     }
 }

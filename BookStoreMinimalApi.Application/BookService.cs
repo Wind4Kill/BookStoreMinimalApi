@@ -45,7 +45,7 @@ namespace BookStoreMinimalApi.Application
         public async Task<int> DeleteBook(int id)
         {
             Book requestedBook = await CheckIfBookExistsOrThrowException(id);
-            int affectedRows = await _bookRepository.DeleteBook(id);
+            int affectedRows = await _bookRepository.DeleteBook(requestedBook);
             return affectedRows;
         }
 
@@ -76,24 +76,6 @@ namespace BookStoreMinimalApi.Application
         public async Task<int> UpdateBook(int id, ChangeBookDto changeBook)
         {
             Book requestedBook = await CheckIfBookExistsOrThrowException(id);
-
-            // Dictionary<string, string> validatedValues = validator.Validate(changeBook);
-
-            // if (validatedValues.Count > 0)
-            // {
-            //     Type changeBookType = typeof(Book);
-            //     string[] propertyNames = changeBookType.GetProperties().Select(p => p.Name).ToArray();
-
-            //     foreach (KeyValuePair<string, string> pair in validatedValues)
-            //     {
-
-            //         if (propertyNames.Contains(pair.Key))
-            //         {
-            //             var requestedBookProperty = requestedBook.GetType().GetProperty(pair.Key);
-            //             requestedBookProperty!.SetValue(requestedBook, pair.Value);
-            //         }
-            //     }
-            // }
 
             _mapper.Map(changeBook, requestedBook);
 
