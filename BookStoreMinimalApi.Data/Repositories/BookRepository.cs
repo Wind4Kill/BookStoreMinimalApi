@@ -26,7 +26,7 @@ namespace BookStoreMinimalApi.Data.Repositories
 
         public async Task<int> DeleteBook(int id)
         {
-            Book requestedBook = _context.Books.Single(b => b.BookId == id);
+            Book requestedBook = await _context.Books.SingleAsync(b => b.BookId == id);
             requestedBook.IsDeleted = true;
             return await _context.SaveChangesAsync();
         }
