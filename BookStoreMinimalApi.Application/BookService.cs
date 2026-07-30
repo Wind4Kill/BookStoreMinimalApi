@@ -51,7 +51,7 @@ namespace BookStoreMinimalApi.Application
             }
             catch (Exception ex)
             {
-                throw new EntityNotFoundException("Book with such ID wasn't found and can't be deleted.", ex);
+                throw new EntityNotFoundException($"Book with input {id} ID wasn't found and can't be deleted.", ex);
             }
         }
 
