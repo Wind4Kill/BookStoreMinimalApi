@@ -1,3 +1,4 @@
+using System.Globalization;
 using BookStoreMinimalApi.Application;
 using BookStoreMinimalApi.Data;
 using BookStoreMinimalApi.Domain.DTOs;
@@ -49,7 +50,7 @@ namespace BookStoreMinimalApi.Endpoints
             bookEndpoints.MapPost("", async (CreateBookDto bookDto, IBookService service, LinkGenerator linkGenerator) =>
             {
                 Book createdBook = await service.CreateBook(bookDto);
-                string? link = linkGenerator.GetPathByName("GetBookById", new LinkOptions() { LowercaseUrls = true });
+                string? link = linkGenerator.GetPathByName(endpointName: "GetBookById", new { id = createdBook.BookId }, options: new LinkOptions() { LowercaseUrls = true });
                 return Results.Created(link, createdBook);
             }).WithParameterValidation().Produces(201);
 
@@ -60,9 +61,15 @@ namespace BookStoreMinimalApi.Endpoints
 
             });
 
-            bookEndpoints.MapDelete("/{id:int}", async (int id, IBookService service) =>
+            bookEndpoints.MapDelete("{id:int}", async (int id, IBookService service) =>
             {
                 await service.DeleteBook(id);
+                return Results.NoContent();
+            });
+
+            bookEndpoints.MapPut("{id:int}", async (int id, ChangeBookDto changeBookDto, IBookService service, ChangeBookValidator validator) =>
+            {
+                await service.UpdateBook(id, changeBookDto, validator);
                 return Results.NoContent();
             });
 

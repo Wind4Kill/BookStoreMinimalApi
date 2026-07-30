@@ -8,6 +8,7 @@ using BookStoreMinimalApi.Domain.FiltrationEntities;
 using BookStoreMinimalApi.Domain.Entities;
 using AutoMapper.QueryableExtensions;
 using AutoMapper;
+using System.Reflection;
 namespace BookStoreMinimalApi.Application
 {
     public class BookService : IBookService
@@ -44,14 +45,16 @@ namespace BookStoreMinimalApi.Application
 
         public async Task<int> DeleteBook(int id)
         {
-            try
+            Book? requestedBook = await _bookRepository.GetBookById(id);
+            if (requestedBook is not null)
             {
                 int affectedRows = await _bookRepository.DeleteBook(id);
                 return affectedRows;
             }
-            catch (Exception ex)
+            else
             {
-                throw new EntityNotFoundException($"Book with input {id} ID wasn't found and can't be deleted.", ex);
+                throw new EntityNotFoundException
+                ($"Book with input {id} ID wasn't found and can't be deleted.");
             }
         }
 
@@ -82,5 +85,35 @@ namespace BookStoreMinimalApi.Application
 
             return mappedBook;
         }
+
+        public async Task<int> UpdateBook(int id, ChangeBookDto changeBook, IValidator<ChangeBookDto> validator)
+        {
+            Book? requestedBook = await _bookRepository.GetBookById(id);
+            if (requestedBook is null)
+            {
+                throw new EntityNotFoundException("Book with such ID wasn't found.");
+            }
+
+            Dictionary<string, string> validatedValues = validator.Validate(changeBook);
+
+            if (validatedValues.Count > 0)
+            {
+                Type changeBookType = typeof(ChangeBookDto);
+                string[] propertyNames = changeBookType.GetProperties().Select(p => p.Name).ToArray();
+
+                foreach (KeyValuePair<string, string> pair in validatedValues)
+                {
+
+                    if (propertyNames.Contains(pair.Key))
+                    {
+                        var requestedBookProperty = changeBook.GetType().GetProperty(pair.Key);
+                        requestedBookProperty!.SetValue(requestedBook, pair.Value);
+                    }
+                }
+            }
+
+            return await _bookRepository.UpdateBook();
+        }
+
     }
 }

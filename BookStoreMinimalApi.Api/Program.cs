@@ -30,12 +30,12 @@ builder.Services.AddDbContext<ApplicationContext>(options =>
 builder.Services.AddServices();
 
 
-// if (builder.Environment.IsDevelopment())
-// {
+if (builder.Environment.IsDevelopment())
+{
 
       builder.Services.AddEndpointsApiExplorer();
       builder.Services.AddSwaggerGen();
-// }
+}
 
 var app = builder.Build();
 
@@ -76,12 +76,12 @@ if (app.Environment.IsProduction())
 }
 
 app.UseStatusCodePages();
-// if (app.Environment.IsDevelopment())
-// {
+if (app.Environment.IsDevelopment())
+{
       await app.SeedData();
       app.UseSwagger();
       app.UseSwaggerUI();
-// }
+}
 
 app.AddBookEndpoints();
 
