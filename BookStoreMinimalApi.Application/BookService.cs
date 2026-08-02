@@ -18,7 +18,6 @@ namespace BookStoreMinimalApi.Application
         readonly IBookRepository _bookRepository;
         readonly ICategoryService _categoryService;
         readonly IMapper _mapper;
-
         readonly CustomMemoryCache _cache;
 
         public BookService(IBookRepository bookRepository,

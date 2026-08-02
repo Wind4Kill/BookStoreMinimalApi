@@ -1,8 +1,10 @@
+using System.Collections.Immutable;
 using BookStoreMinimalApi.Data;
 using BookStoreMinimalApi.Domain.DTOs;
 using BookStoreMinimalApi.Domain.DTOs.BookDTOs;
 using BookStoreMinimalApi.Domain.FiltrationEntities;
 using BookStoreMinimalApi.Domain.Interfaces.Services;
+using Microsoft.AspNetCore.OutputCaching;
 
 namespace BookStoreMinimalApi.Endpoints
 {
@@ -11,6 +13,7 @@ namespace BookStoreMinimalApi.Endpoints
         public static void AddBookEndpoints(this WebApplication app)
         {
             var bookEndpoints = app.MapGroup("api/books").WithTags("Books");
+            
             bookEndpoints.MapGet("", async ([AsParameters] Filters filters, IBookService service) =>
             {
                 Filtration filtration = new();
@@ -36,18 +39,20 @@ namespace BookStoreMinimalApi.Endpoints
                 List<GetBookDTO>? booksDtos = await service.GetAllBooks(filtration);
                 return Results.Ok(booksDtos);
 
-            }).WithParameterValidation().Produces<List<GetBookDTO>>();
+            }).WithParameterValidation().Produces<List<GetBookDTO>>().
+            CacheOutput(builder=>builder.Expire(TimeSpan.FromSeconds(120)).Tag("all-books"));
 
             bookEndpoints.MapGet("{id:int}", async (int id, IBookService service) =>
             {
                 GetBookByIdDTO requestedBookDto = await service.GetBookById(id);
                 return Results.Ok(requestedBookDto);
-            }).Produces<GetBookByIdDTO>().WithName("GetBookById");
+            }).CacheOutput().Produces<GetBookByIdDTO>().WithName("GetBookById");
 
-            bookEndpoints.MapPost("", async (CreateBookDto bookDto, IBookService service, LinkGenerator linkGenerator) =>
+            bookEndpoints.MapPost("", async (CreateBookDto bookDto, IBookService service, LinkGenerator linkGenerator, IOutputCacheStore cache) =>
             {
                 Book createdBook = await service.CreateBook(bookDto);
                 string? link = linkGenerator.GetPathByName(endpointName: "GetBookById", new { id = createdBook.BookId }, options: new LinkOptions() { LowercaseUrls = true });
+                await cache.EvictByTagAsync("all-books", default);
                 return Results.Created(link, createdBook);
             }).WithParameterValidation().Produces(201);
 
@@ -58,15 +63,17 @@ namespace BookStoreMinimalApi.Endpoints
 
             });
 
-            bookEndpoints.MapDelete("{id:int}", async (int id, IBookService service) =>
+            bookEndpoints.MapDelete("{id:int}", async (int id, IBookService service, IOutputCacheStore  cache) =>
             {
                 await service.DeleteBook(id);
+                await cache.EvictByTagAsync("all-books", default);
                 return Results.NoContent();
             });
 
-            bookEndpoints.MapPut("{id:int}", async (int id, ChangeBookDto changeBookDto, IBookService service) =>
+            bookEndpoints.MapPut("{id:int}", async (int id, ChangeBookDto changeBookDto, IBookService service, IOutputCacheStore cache) =>
             {
                 await service.UpdateBook(id, changeBookDto);
+                await cache.EvictByTagAsync("all-books", default);
                 return Results.NoContent();
             });
 

@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddProblemDetails();
+builder.Services.AddOutputCache();
 builder.Services.AddAutoMapper(cfg =>
 {
       cfg.AddMaps(Assembly.Load("BookStoreMinimalApi.Domain"));
@@ -32,7 +33,6 @@ builder.Services.AddServices();
 
 if (builder.Environment.IsDevelopment())
 {
-
       builder.Services.AddEndpointsApiExplorer();
       builder.Services.AddSwaggerGen();
 }
@@ -76,6 +76,7 @@ if (app.Environment.IsProduction())
 }
 
 app.UseStatusCodePages();
+app.UseOutputCache();
 if (app.Environment.IsDevelopment())
 {
       await app.SeedData();
@@ -84,5 +85,4 @@ if (app.Environment.IsDevelopment())
 }
 
 app.AddBookEndpoints();
-
 app.Run();
