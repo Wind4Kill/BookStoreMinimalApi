@@ -76,13 +76,17 @@ if (app.Environment.IsProduction())
 }
 
 app.UseStatusCodePages();
-app.UseOutputCache();
 if (app.Environment.IsDevelopment())
 {
-      await app.SeedData();
       app.UseSwagger();
       app.UseSwaggerUI();
 }
 
+app.UseOutputCache();
 app.AddBookEndpoints();
+
+if(app.Environment.IsDevelopment())
+{
+      await app.SeedData();
+}
 app.Run();
