@@ -11,6 +11,12 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddProblemDetails();
+builder.Services.AddStackExchangeRedisOutputCache((options)=>
+{
+      options.Configuration = builder.Configuration.GetConnectionString("RedisConnectionString");
+      options.InstanceName = "bookstore-api-cache";
+
+});
 builder.Services.AddOutputCache();
 builder.Services.AddAutoMapper(cfg =>
 {
@@ -31,7 +37,7 @@ builder.Services.AddDbContext<ApplicationContext>(options =>
 builder.Services.AddServices();
 
 
-if (builder.Environment.IsDevelopment())
+if (builder.Environment.IsDevelopment()||builder.Environment.IsProduction())
 {
       builder.Services.AddEndpointsApiExplorer();
       builder.Services.AddSwaggerGen();
@@ -76,7 +82,7 @@ if (app.Environment.IsProduction())
 }
 
 app.UseStatusCodePages();
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment()||app.Environment.IsProduction())
 {
       app.UseSwagger();
       app.UseSwaggerUI();
@@ -85,7 +91,7 @@ if (app.Environment.IsDevelopment())
 app.UseOutputCache();
 app.AddBookEndpoints();
 
-if(app.Environment.IsDevelopment())
+if(app.Environment.IsDevelopment()||app.Environment.IsProduction())
 {
       await app.SeedData();
 }

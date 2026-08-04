@@ -1,4 +1,3 @@
-version: '3.8'
 
 services:
   web-api:
@@ -7,8 +6,11 @@ services:
       - "8080:8080"
     environment: 
       ConnectionStrings__PostgreConnectionString: ${CONNECTION}
+      ConnectionStrings__RedisConnectionString: ${REDIS_CONNECTION}
     depends_on:
       db:
+        condition: service_healthy
+      redis:
         condition: service_healthy
 
   db:
@@ -20,10 +22,22 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres}"]
       interval: 5s
       timeout: 5s
       retries: 10
 
+  redis:
+    image: redis:7-alpine
+    container_name: redis_cache
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
 volumes:
   postgres_data:
+  redis_data:
