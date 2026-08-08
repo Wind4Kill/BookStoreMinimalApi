@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Reflection;
 using BookStoreMinimalApi;
+using BookStoreMinimalApi.Api;
 using BookStoreMinimalApi.Application.Exceptions;
 using BookStoreMinimalApi.Data;
 using BookStoreMinimalApi.Endpoints;
@@ -10,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 builder.Services.AddProblemDetails();
 builder.Services.AddStackExchangeRedisOutputCache((options)=>
 {
@@ -47,38 +49,8 @@ var app = builder.Build();
 
 if (app.Environment.IsProduction())
 {
-      app.UseExceptionHandler(errorApp =>
-      {
-            errorApp.Run(async context =>
-            {
-                  var error = context.Features.Get<IExceptionHandlerFeature>()?.Error;
-                  if (error is null)
-                        return;
-
-                  var (statusCode, message) = error switch
-
-                  {
-                        EntityNotFoundException => (StatusCodes.Status404NotFound, error.Message),
-                        _ => (StatusCodes.Status500InternalServerError, error.Message)
-                  };
-
-                  var problemDetails = new ProblemDetails
-                  {
-                        Status = statusCode,
-                        Title = message,
-                        Type = $"https://httpstatuses.com/{statusCode}",
-                        Detail = error.Message,
-                        Instance = context.Request.Path
-                  };
-
-                  context.Response.StatusCode = statusCode;
-
-                  await context.Response.WriteAsJsonAsync(problemDetails);
-            });
-      });
-
+      app.UseExceptionHandler();
       await app.UpdateDatabase();
-
 }
 
 app.UseStatusCodePages();
