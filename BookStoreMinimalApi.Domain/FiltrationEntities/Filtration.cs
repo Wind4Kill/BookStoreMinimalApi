@@ -19,18 +19,11 @@ namespace BookStoreMinimalApi.Domain.FiltrationEntities
         string? orderOptions,
         string? filterValue, int? pageNum)
         {
-            if (Enum.TryParse<FilterOptions>(filterOptions, out FilterOptions filterType))
-            {
-                FilterOptions = filterType;
-            }
-            if (Enum.TryParse<OrderOptions>(orderOptions, out OrderOptions orderType))
-            {
-                OrderOptions = orderType;
-            }
-            if (!string.IsNullOrEmpty(filterValue) && filterValue != " ")
-            {
-                FilterValue = filterValue;
-            }
+            FilterOptions = Enum.TryParse<FilterOptions>(filterOptions, out FilterOptions filterType) ? filterType:FilterOptions.None;
+
+            OrderOptions = Enum.TryParse<OrderOptions>(orderOptions, out OrderOptions orderType) ? orderType : OrderOptions.ByDefault;
+
+            FilterValue = filterValue;
 
             PageNum = pageNum.HasValue ? pageNum.Value : 1;
         }
