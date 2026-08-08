@@ -2,10 +2,11 @@
 services:
   web-api:
     build: .
+    container_name: api
     ports: 
       - "8080:8080"
     environment: 
-      ConnectionStrings__PostgreConnectionString: ${CONNECTION}
+      ConnectionStrings__PostgreConnectionString: ${DB_CONNECTION}
       ConnectionStrings__RedisConnectionString: ${REDIS_CONNECTION}
     depends_on:
       db:
@@ -15,6 +16,7 @@ services:
 
   db:
     image: postgres:16
+    container_name: db
     environment:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
@@ -28,7 +30,7 @@ services:
       retries: 10
 
   redis:
-    image: redis:7-alpine
+    image: redis:8-alpine
     container_name: redis_cache
     volumes:
       - redis_data:/data

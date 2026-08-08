@@ -17,10 +17,10 @@ namespace BookStoreMinimalApi.Application
             {
                   _categoryRepository = categoryRepository;
             }
-            public async Task<List<Category>> CheckExistingCategories(string[] categoriesNames)
+            public async Task<List<Category>> CheckExistingCategories(string[] categoriesNames, CancellationToken cancellationToken)
             {
                   List<Category> bookCategories = new List<Category>();
-                  List<Category>? checkCategories = await _categoryRepository.GetCategoriesByName(categoriesNames);
+                  List<Category>? checkCategories = await _categoryRepository.GetCategoriesByName(categoriesNames, cancellationToken);
 
                   if (checkCategories is not null)
                   {
