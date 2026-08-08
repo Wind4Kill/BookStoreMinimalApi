@@ -33,11 +33,13 @@ namespace BookStoreMinimalApi.Application
             _cache = cache;
         }
 
-        public async Task<Book> CreateBook(CreateBookDto bookDto)
+        public async Task<GetBookByIdDTO> CreateBook(CreateBookDto bookDto, CancellationToken cancellationToken)
         {
-            Author? checkAuthor = await _authorService.CheckExistingAuthor(bookDto.Author.Name);
+            Author? checkAuthor = await _authorService.CheckExistingAuthor(bookDto.Author.Name, cancellationToken);
 
-            var bookCategories = await _categoryService.CheckExistingCategories(bookDto.Categories.Select(c => c.CategoryName).ToArray());
+            var bookCategories = await _categoryService.
+            CheckExistingCategories(bookDto.Categories.Select(c => c.CategoryName).ToArray(),
+            cancellationToken);
 
             Book createdBook = new Book()
             {
@@ -48,19 +50,21 @@ namespace BookStoreMinimalApi.Application
                 Categories = bookCategories
             };
 
-            return await _bookRepository.AddBook(createdBook);
+            createdBook = await _bookRepository.AddBook(createdBook, cancellationToken);
+
+            GetBookByIdDTO mappedBook = _mapper.Map<GetBookByIdDTO>(createdBook);
+            return mappedBook;
         }
 
-        public async Task<int> DeleteBook(int id)
+        public async Task DeleteBook(int id, CancellationToken cancellationToken)
         {
-            Book requestedBook = await CheckIfBookExistsOrThrowException(id);
-            int affectedRows = await _bookRepository.DeleteBook(requestedBook);
-            string key = $"Book_{id}";
+            Book requestedBook = await CheckIfBookExistsOrThrowException(id, cancellationToken);
+            await _bookRepository.DeleteBook(requestedBook, cancellationToken);
+            string key = GetKeyById(id);
             _cache.Cache.Remove(key);
-            return affectedRows;
         }
 
-        public async Task<List<GetBookDTO>> GetAllBooks(Filtration filters)
+        public async Task<List<GetBookDTO>> GetAllBooks(Filtration filters, CancellationToken cancellationToken)
         {
             IQueryable<Book> filteredBooks = _bookRepository.GetAllBooks().
             OrderEntities(filters.OrderOptions, filters.FilterValue!).
@@ -69,51 +73,52 @@ namespace BookStoreMinimalApi.Application
 
             List<GetBookDTO> mappedBooks = await _bookRepository.ToListAsync(
                 _mapper.ProjectTo<GetBookDTO>(filteredBooks)
-            );
+            , cancellationToken);
 
             return mappedBooks;
 
         }
 
-        public async Task<GetBookByIdDTO> GetBookById(int id)
+        public async Task<GetBookByIdDTO> GetBookById(int id, CancellationToken cancellationToken)
         {
-            string key = $"Book_{id}";
+            string key = GetKeyById(id);
             GetBookByIdDTO? mappedBook = await _cache.Cache.GetOrCreateAsync(key, async (entry) =>
             {
                 entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1);
                 entry.SlidingExpiration = TimeSpan.FromMinutes(10);
                 entry.Size = 1;
-                Book requestedBook = await CheckIfBookExistsOrThrowException(id);
+                Book requestedBook = await CheckIfBookExistsOrThrowException(id, cancellationToken);
                 return _mapper.Map<GetBookByIdDTO>(requestedBook);
             });
 
             return mappedBook!;
         }
 
-        public async Task<int> UpdateBook(int id, ChangeBookDto changeBook)
+        public async Task UpdateBook(int id, ChangeBookDto changeBook, CancellationToken cancellationToken)
         {
-            Book requestedBook = await CheckIfBookExistsOrThrowException(id);
+            Book requestedBook = await CheckIfBookExistsOrThrowException(id, cancellationToken);
 
             _mapper.Map(changeBook, requestedBook);
 
-            int result = await _bookRepository.UpdateBook();
+            await _bookRepository.UpdateBook(cancellationToken);
 
-            string key = $"Book_{id}";
+            string key = GetKeyById(id);
 
             _cache.Cache.Remove(key);
 
-            return result;
         }
 
-        private async Task<Book> CheckIfBookExistsOrThrowException(int id)
+        private async Task<Book> CheckIfBookExistsOrThrowException(int id, CancellationToken cancellationToken)
         {
-            Book? requestedBook = await _bookRepository.GetBookById(id);
+            Book? requestedBook = await _bookRepository.GetBookById(id, cancellationToken);
             if (requestedBook is null)
             {
                 throw new EntityNotFoundException("Book with such ID wasn't found.");
             }
             return requestedBook;
         }
+
+        private string GetKeyById(int id) => $"Book:{id}";
 
     }
 }

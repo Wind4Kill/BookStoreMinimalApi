@@ -8,7 +8,7 @@ namespace BookStoreMinimalApi.Domain.Interfaces.Repositories
 {
     public interface ICategoryRepository
     {
-        Task<Category?> GetCategoryById(int id);
-        Task<List<Category>?> GetCategoriesByName(params string[] names);
+        Task<Category?> GetCategoryById(int id, CancellationToken cancellationToken);
+        Task<List<Category>?> GetCategoriesByName(string[] names, CancellationToken cancellationToken);
     }
 }

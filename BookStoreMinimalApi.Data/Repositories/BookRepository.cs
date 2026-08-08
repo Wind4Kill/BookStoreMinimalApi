@@ -17,17 +17,17 @@ namespace BookStoreMinimalApi.Data.Repositories
             _context = context;
         }
 
-        public async Task<Book> AddBook(Book book)
+        public async Task<Book> AddBook(Book book, CancellationToken cancellationToken)
         {
             _context.Add(book);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(cancellationToken);
             return book;
         }
 
-        public async Task<int> DeleteBook(Book book)
+        public async Task<int> DeleteBook(Book book, CancellationToken cancellationToken)
         {
             book.IsDeleted = true;
-            return await _context.SaveChangesAsync();
+            return await _context.SaveChangesAsync(cancellationToken);
         }
 
         public IQueryable<Book> GetAllBooks()
@@ -38,23 +38,23 @@ namespace BookStoreMinimalApi.Data.Repositories
             .Include(b => b.Categories);
         }
 
-        public async Task<Book?> GetBookById(int id)
+        public async Task<Book?> GetBookById(int id, CancellationToken cancellationToken)
         {
             return await _context.Books
             .Include(b => b.Author)
             .Include(b => b.Categories)
             .Include(b => b.Reviews)
-            .SingleOrDefaultAsync(b => b.BookId == id);
+            .SingleOrDefaultAsync(b => b.BookId == id, cancellationToken);
         }
 
-        public async Task<List<T>> ToListAsync<T>(IQueryable<T> query)
+        public async Task<List<T>> ToListAsync<T>(IQueryable<T> query, CancellationToken cancellationToken)
         {
-            return await query.ToListAsync();
+            return await query.ToListAsync(cancellationToken);
         }
 
-        public async Task<int> UpdateBook()
+        public async Task<int> UpdateBook(CancellationToken cancellationToken)
         {
-            return await _context.SaveChangesAsync();
+            return await _context.SaveChangesAsync(cancellationToken);
         }
     }
 }

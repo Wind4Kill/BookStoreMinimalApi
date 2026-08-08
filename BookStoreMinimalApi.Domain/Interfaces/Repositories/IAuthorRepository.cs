@@ -8,8 +8,8 @@ namespace BookStoreMinimalApi.Domain.Interfaces.Repositories
 {
     public interface IAuthorRepository
     {
-        Task<Author?> GetAuthorByName(string authorName);
+        Task<Author?> GetAuthorByName(string authorName, CancellationToken cancellationToken);
 
-        Task<Author?> GetAuthorById(int id);
+        Task<Author?> GetAuthorById(int id, CancellationToken cancellationToken);
     }
 }

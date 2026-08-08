@@ -8,6 +8,6 @@ namespace BookStoreMinimalApi.Domain.Interfaces.Services
 {
      public interface IAuthorService
       {
-            Task<Author?> CheckExistingAuthor(string authorName);
+            Task<Author?> CheckExistingAuthor(string authorName, CancellationToken cancellationToken);
       }
 }

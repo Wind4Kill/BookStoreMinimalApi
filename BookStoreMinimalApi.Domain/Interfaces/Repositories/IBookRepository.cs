@@ -11,15 +11,15 @@ namespace BookStoreMinimalApi.Domain.Interfaces.Repositories
     {
         IQueryable<Book> GetAllBooks();
 
-        Task<List<T>> ToListAsync<T>(IQueryable<T> query);
+        Task<List<T>> ToListAsync<T>(IQueryable<T> query, CancellationToken cancellationToken);
 
-        Task<Book?> GetBookById(int id);
+        Task<Book?> GetBookById(int id, CancellationToken cancellationToken);
 
-        Task<Book> AddBook(Book book);
+        Task<Book> AddBook(Book book, CancellationToken cancellationToken);
 
-        Task<int> DeleteBook(Book book);
+        Task<int> DeleteBook(Book book, CancellationToken cancellationToken);
 
-        Task<int> UpdateBook();
+        Task<int> UpdateBook(CancellationToken cancellationToken);
         
     }
 }

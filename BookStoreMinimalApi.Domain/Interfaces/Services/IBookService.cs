@@ -1,26 +1,21 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using BookStoreMinimalApi.Domain.FiltrationEntities;
 using BookStoreMinimalApi.Data;
 using BookStoreMinimalApi.Domain.DTOs;
 using BookStoreMinimalApi.Domain.DTOs.BookDTOs;
-using BookStoreMinimalApi.Domain.Interfaces.Repositories;
 
 namespace BookStoreMinimalApi.Domain.Interfaces.Services
 {
     public interface IBookService
     {
-        Task<List<GetBookDTO>> GetAllBooks(Filtration filters);
+        Task<List<GetBookDTO>> GetAllBooks(Filtration filters, CancellationToken cancellationToken);
 
-        Task<GetBookByIdDTO> GetBookById(int id);
+        Task<GetBookByIdDTO> GetBookById(int id, CancellationToken cancellationToken);
 
-        Task<Book> CreateBook(CreateBookDto bookDto);
+        Task<GetBookByIdDTO> CreateBook(CreateBookDto bookDto, CancellationToken cancellationToken);
 
-        Task<int> DeleteBook(int id);
+        Task DeleteBook(int id, CancellationToken cancellationToken);
 
-        public Task<int> UpdateBook(int id, ChangeBookDto changeBook);
+        public Task UpdateBook(int id, ChangeBookDto changeBook, CancellationToken cancellationToken);
         
         
     }

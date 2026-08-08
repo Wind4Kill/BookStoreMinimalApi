@@ -20,7 +20,7 @@ namespace BookStoreMinimalApi.Domain.Entities
 
         public Author() { }
 
-        public Author(DateTime birthDay) : base()
+        public Author(DateTime birthDay)
         {
             _dateOfBirth = birthDay;
         }

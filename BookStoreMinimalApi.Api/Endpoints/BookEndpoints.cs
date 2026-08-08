@@ -14,48 +14,51 @@ namespace BookStoreMinimalApi.Endpoints
         {
             var bookEndpoints = app.MapGroup("api/books").WithTags("Books");
             
-            bookEndpoints.MapGet("", async ([AsParameters] Filters filters, IBookService service) =>
+            bookEndpoints.MapGet("", async ([AsParameters] Filters filters, IBookService service, CancellationToken cancellationToken) =>
             {
                 Filtration filtration = new(filterOptions: filters.FilterOptions, orderOptions: filters.OrderOptions,
                 filterValue: filters.FilterValue, pageNum: filters.PageNum);
                
-                List<GetBookDTO>? booksDtos = await service.GetAllBooks(filtration);
+                List<GetBookDTO>? booksDtos = await service.GetAllBooks(filtration, cancellationToken);
                 return Results.Ok(booksDtos);
 
             }).WithParameterValidation().Produces<List<GetBookDTO>>().
             CacheOutput(builder=>builder.Expire(TimeSpan.FromSeconds(120)).Tag("all-books"));
 
-            bookEndpoints.MapGet("{id:int}", async (int id, IBookService service) =>
+            bookEndpoints.MapGet("{id:int}", async (int id, IBookService service, CancellationToken cancellationToken) =>
             {
-                GetBookByIdDTO requestedBookDto = await service.GetBookById(id);
+                GetBookByIdDTO requestedBookDto = await service.GetBookById(id, cancellationToken);
                 return Results.Ok(requestedBookDto);
             }).CacheOutput().Produces<GetBookByIdDTO>().WithName("GetBookById");
 
-            bookEndpoints.MapPost("", async (CreateBookDto bookDto, IBookService service, LinkGenerator linkGenerator, IOutputCacheStore cache) =>
+            bookEndpoints.MapPost("", async (CreateBookDto bookDto, IBookService service, LinkGenerator linkGenerator,
+            IOutputCacheStore cache, CancellationToken cancellationToken) =>
             {
-                Book createdBook = await service.CreateBook(bookDto);
+                GetBookByIdDTO createdBook = await service.CreateBook(bookDto, cancellationToken);
                 string? link = linkGenerator.GetPathByName(endpointName: "GetBookById", new { id = createdBook.BookId }, options: new LinkOptions() { LowercaseUrls = true });
                 await cache.EvictByTagAsync("all-books", default);
                 return Results.Created(link, createdBook);
             }).WithParameterValidation().Produces(201);
 
-            bookEndpoints.MapPost("{id:int}/reviews", async (int id, IReviewService reviewService, ReviewDto reviewDto) =>
+            bookEndpoints.MapPost("{id:int}/reviews", async (int id, IReviewService reviewService,
+             ReviewDto reviewDto, CancellationToken cancellationToken) =>
             {
-                await reviewService.AddReview(id, reviewDto);
+                await reviewService.AddReview(id, reviewDto, cancellationToken);
                 return Results.Ok();
-
             });
 
-            bookEndpoints.MapDelete("{id:int}", async (int id, IBookService service, IOutputCacheStore  cache) =>
+            bookEndpoints.MapDelete("{id:int}", async (int id, IBookService service,
+            IOutputCacheStore cache, CancellationToken cancellationToken) =>
             {
-                await service.DeleteBook(id);
+                await service.DeleteBook(id, cancellationToken);
                 await cache.EvictByTagAsync("all-books", default);
                 return Results.NoContent();
             });
 
-            bookEndpoints.MapPut("{id:int}", async (int id, ChangeBookDto changeBookDto, IBookService service, IOutputCacheStore cache) =>
+            bookEndpoints.MapPut("{id:int}", async (int id, ChangeBookDto changeBookDto,
+            IBookService service, IOutputCacheStore cache, CancellationToken cancellationToken) =>
             {
-                await service.UpdateBook(id, changeBookDto);
+                await service.UpdateBook(id, changeBookDto, cancellationToken);
                 await cache.EvictByTagAsync("all-books", default);
                 return Results.NoContent();
             });

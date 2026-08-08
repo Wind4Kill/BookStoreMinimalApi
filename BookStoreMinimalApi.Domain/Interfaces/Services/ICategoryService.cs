@@ -9,7 +9,7 @@ namespace BookStoreMinimalApi.Domain.Interfaces.Services
 {
     public interface ICategoryService
       {
-            Task<List<Category>> CheckExistingCategories(string[] categoriesNames);
+            Task<List<Category>> CheckExistingCategories(string[] categoriesNames, CancellationToken cancellationToken);
       }
 
 }

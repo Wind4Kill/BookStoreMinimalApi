@@ -16,9 +16,9 @@ namespace BookStoreMinimalApi.Application
             {
                   _authorRepository = authorRepository;
             }
-            public async Task<Author?> CheckExistingAuthor(string authorName)
+            public async Task<Author?> CheckExistingAuthor(string authorName, CancellationToken cancellationToken)
             {
-                  Author? checkAuthor = await _authorRepository.GetAuthorByName(authorName);
+                  Author? checkAuthor = await _authorRepository.GetAuthorByName(authorName, cancellationToken);
 
                   return checkAuthor;
             }
