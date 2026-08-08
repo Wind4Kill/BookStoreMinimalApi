@@ -2,6 +2,7 @@ using System.Collections.Immutable;
 using BookStoreMinimalApi.Data;
 using BookStoreMinimalApi.Domain.DTOs;
 using BookStoreMinimalApi.Domain.DTOs.BookDTOs;
+using BookStoreMinimalApi.Domain.Entities;
 using BookStoreMinimalApi.Domain.FiltrationEntities;
 using BookStoreMinimalApi.Domain.Interfaces.Services;
 using Microsoft.AspNetCore.OutputCaching;
@@ -41,10 +42,12 @@ namespace BookStoreMinimalApi.Endpoints
             }).WithParameterValidation().Produces(201);
 
             bookEndpoints.MapPost("{id:int}/reviews", async (int id, IReviewService reviewService,
-             ReviewDto reviewDto, CancellationToken cancellationToken) =>
+             ReviewDto reviewDto, LinkGenerator links, CancellationToken cancellationToken) =>
             {
-                await reviewService.AddReview(id, reviewDto, cancellationToken);
-                return Results.Ok();
+                ReviewDto createdReview = await reviewService.AddReview(id, reviewDto, cancellationToken);
+                string? link = $"{links.GetPathByName("GetBookById", new { id = id })}/reviews";
+                
+                return Results.Created(link, createdReview);
             });
 
             bookEndpoints.MapDelete("{id:int}", async (int id, IBookService service,

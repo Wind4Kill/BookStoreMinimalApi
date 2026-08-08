@@ -24,10 +24,10 @@ namespace BookStoreMinimalApi.Data.Repositories
             return book;
         }
 
-        public async Task<int> DeleteBook(Book book, CancellationToken cancellationToken)
+        public async Task DeleteBook(Book book, CancellationToken cancellationToken)
         {
             book.IsDeleted = true;
-            return await _context.SaveChangesAsync(cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
         }
 
         public IQueryable<Book> GetAllBooks()
@@ -52,9 +52,9 @@ namespace BookStoreMinimalApi.Data.Repositories
             return await query.ToListAsync(cancellationToken);
         }
 
-        public async Task<int> UpdateBook(CancellationToken cancellationToken)
+        public async Task UpdateBook(CancellationToken cancellationToken)
         {
-            return await _context.SaveChangesAsync(cancellationToken);
+             await _context.SaveChangesAsync(cancellationToken);
         }
     }
 }

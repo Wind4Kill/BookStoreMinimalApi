@@ -20,11 +20,14 @@ namespace BookStoreMinimalApi.Application
             _mapper = mapper;
             _reviewRepository = reviewRepository;
         }
-        public async Task<int> AddReview(int bookId, ReviewDto reviewDto)
+        public async Task<ReviewDto> AddReview(int bookId, ReviewDto reviewDto, CancellationToken cancellationToken)
         {
-            Review review = _mapper.Map<Review>(reviewDto);
-            review.BookId = bookId;
-            return await _reviewRepository.AddReview(review);
+            Review createdReview = _mapper.Map<Review>(reviewDto);
+            createdReview.BookId = bookId;
+            createdReview = await _reviewRepository.AddReview(createdReview, cancellationToken);
+            ReviewDto mappedReview = _mapper.Map<ReviewDto>(createdReview);
+            return mappedReview;
+           
         }
     }
 }

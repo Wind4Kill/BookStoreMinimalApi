@@ -17,9 +17,9 @@ namespace BookStoreMinimalApi.Domain.Interfaces.Repositories
 
         Task<Book> AddBook(Book book, CancellationToken cancellationToken);
 
-        Task<int> DeleteBook(Book book, CancellationToken cancellationToken);
+        Task DeleteBook(Book book, CancellationToken cancellationToken);
 
-        Task<int> UpdateBook(CancellationToken cancellationToken);
+        Task UpdateBook(CancellationToken cancellationToken);
         
     }
 }

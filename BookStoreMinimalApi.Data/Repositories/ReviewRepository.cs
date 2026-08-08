@@ -15,10 +15,11 @@ namespace BookStoreMinimalApi.Data.Repositories
         {
             _context = context;
         }
-        public Task<int> AddReview(Review review, CancellationToken cancellationToken)
+        public async Task<Review> AddReview(Review review, CancellationToken cancellationToken)
         {
             _context.Set<Review>().Add(review);
-            return _context.SaveChangesAsync(cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
+            return review;
         }
     }
 }
