@@ -15,14 +15,24 @@ namespace BookStoreMinimalApi.Domain.FiltrationEntities
 
         public int PageNum { get; set; }
 
-        public Filtration(FilterOptions filterOptions = FilterOptions.None,
-        OrderOptions orderOptions = OrderOptions.ByDefault,
-        string? filterValue = null, int pageNum = 1)
+        public Filtration(string? filterOptions,
+        string? orderOptions,
+        string? filterValue, int? pageNum)
         {
-            FilterOptions = filterOptions;
-            OrderOptions = orderOptions;
-            FilterValue = filterValue;
-            PageNum = pageNum;
+            if (Enum.TryParse<FilterOptions>(filterOptions, out FilterOptions filterType))
+            {
+                FilterOptions = filterType;
+            }
+            if (Enum.TryParse<OrderOptions>(orderOptions, out OrderOptions orderType))
+            {
+                OrderOptions = orderType;
+            }
+            if (!string.IsNullOrEmpty(filterValue) && filterValue != " ")
+            {
+                FilterValue = filterValue;
+            }
+
+            PageNum = pageNum.HasValue ? pageNum.Value : 1;
         }
     }
 }

@@ -16,26 +16,9 @@ namespace BookStoreMinimalApi.Endpoints
             
             bookEndpoints.MapGet("", async ([AsParameters] Filters filters, IBookService service) =>
             {
-                Filtration filtration = new();
-                if (filters is not null)
-                {
-                    if (filters.FilterValue is not null)
-                    {
-                        filtration.FilterValue = filters.FilterValue;
-                    }
-                    if (filters.FilterOptions is not null)
-                    {
-                        filtration.FilterOptions = Enum.Parse<FilterOptions>(filters.FilterOptions);
-                    }
-                    if (filters.OrderOptions is not null)
-                    {
-                        filtration.OrderOptions = Enum.Parse<OrderOptions>(filters.OrderOptions);
-                    }
-                    if (filters.PageNum is not null)
-                    {
-                        filtration.PageNum = filters.PageNum.Value;
-                    }
-                }
+                Filtration filtration = new(filterOptions: filters.FilterOptions, orderOptions: filters.OrderOptions,
+                filterValue: filters.FilterValue, pageNum: filters.PageNum);
+               
                 List<GetBookDTO>? booksDtos = await service.GetAllBooks(filtration);
                 return Results.Ok(booksDtos);
 
