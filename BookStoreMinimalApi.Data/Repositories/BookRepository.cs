@@ -46,12 +46,6 @@ namespace BookStoreMinimalApi.Data.Repositories
             .Include(b => b.Reviews)
             .SingleOrDefaultAsync(b => b.BookId == id, cancellationToken);
         }
-
-        public async Task<List<T>> ToListAsync<T>(IQueryable<T> query, CancellationToken cancellationToken)
-        {
-            return await query.ToListAsync(cancellationToken);
-        }
-
         public async Task UpdateBook(CancellationToken cancellationToken)
         {
              await _context.SaveChangesAsync(cancellationToken);

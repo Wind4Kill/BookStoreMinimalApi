@@ -6,10 +6,10 @@ using BookStoreMinimalApi.Domain.Interfaces.Repositories;
 using BookStoreMinimalApi.Domain.Interfaces.Services;
 using BookStoreMinimalApi.Domain.FiltrationEntities;
 using BookStoreMinimalApi.Domain.Entities;
-
 using AutoMapper;
 using Microsoft.Extensions.Caching.Memory;
 using BookStoreMinimalApi.Api.Endpoints;
+using Microsoft.EntityFrameworkCore;
 namespace BookStoreMinimalApi.Application
 {
     public class BookService : IBookService
@@ -71,12 +71,9 @@ namespace BookStoreMinimalApi.Application
             FilterEntities(filters.FilterOptions, filters.FilterValue!).
             Paginate(filters.PageNum);
 
-            List<GetBookDTO> mappedBooks = await _bookRepository.ToListAsync(
-                _mapper.ProjectTo<GetBookDTO>(filteredBooks)
-            , cancellationToken);
+            List<GetBookDTO> mappedBooks = await _mapper.ProjectTo<GetBookDTO>(filteredBooks).ToListAsync(cancellationToken);
 
             return mappedBooks;
-
         }
 
         public async Task<GetBookByIdDTO> GetBookById(int id, CancellationToken cancellationToken)
