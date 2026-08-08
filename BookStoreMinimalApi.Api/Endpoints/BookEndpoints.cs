@@ -30,7 +30,7 @@ namespace BookStoreMinimalApi.Endpoints
             {
                 GetBookByIdDTO requestedBookDto = await service.GetBookById(id, cancellationToken);
                 return Results.Ok(requestedBookDto);
-            }).CacheOutput().Produces<GetBookByIdDTO>().WithName("GetBookById");
+            }).CacheOutput().Produces<GetBookByIdDTO>().ProducesProblem(statusCode:404).WithName("GetBookById");
 
             bookEndpoints.MapPost("", async (CreateBookDto bookDto, IBookService service, LinkGenerator linkGenerator,
             IOutputCacheStore cache, CancellationToken cancellationToken) =>
@@ -39,7 +39,7 @@ namespace BookStoreMinimalApi.Endpoints
                 string? link = linkGenerator.GetPathByName(endpointName: "GetBookById", new { id = createdBook.BookId }, options: new LinkOptions() { LowercaseUrls = true });
                 await cache.EvictByTagAsync("all-books", default);
                 return Results.Created(link, createdBook);
-            }).WithParameterValidation().Produces(201);
+            }).WithParameterValidation().Produces<GetBookByIdDTO>(201);
 
             bookEndpoints.MapPost("{id:int}/reviews", async (int id, IReviewService reviewService,
              ReviewDto reviewDto, LinkGenerator links, CancellationToken cancellationToken) =>
@@ -48,7 +48,7 @@ namespace BookStoreMinimalApi.Endpoints
                 string? link = $"{links.GetPathByName("GetBookById", new { id = id })}/reviews";
                 
                 return Results.Created(link, createdReview);
-            });
+            }).Produces(201);
 
             bookEndpoints.MapDelete("{id:int}", async (int id, IBookService service,
             IOutputCacheStore cache, CancellationToken cancellationToken) =>
@@ -56,7 +56,7 @@ namespace BookStoreMinimalApi.Endpoints
                 await service.DeleteBook(id, cancellationToken);
                 await cache.EvictByTagAsync("all-books", default);
                 return Results.NoContent();
-            });
+            }).Produces(204).ProducesProblem(statusCode:404);
 
             bookEndpoints.MapPut("{id:int}", async (int id, ChangeBookDto changeBookDto,
             IBookService service, IOutputCacheStore cache, CancellationToken cancellationToken) =>
@@ -64,7 +64,7 @@ namespace BookStoreMinimalApi.Endpoints
                 await service.UpdateBook(id, changeBookDto, cancellationToken);
                 await cache.EvictByTagAsync("all-books", default);
                 return Results.NoContent();
-            });
+            }).Produces(204).ProducesProblem(statusCode:404);
 
         }
 
