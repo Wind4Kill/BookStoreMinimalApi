@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using BookStoreMinimalApi.Api.EndpointFilters;
 using BookStoreMinimalApi.Data;
 using BookStoreMinimalApi.Domain.DTOs;
 using BookStoreMinimalApi.Domain.DTOs.BookDTOs;
@@ -23,7 +24,7 @@ namespace BookStoreMinimalApi.Endpoints
                 List<GetBookDTO>? booksDtos = await service.GetAllBooks(filtration, cancellationToken);
                 return Results.Ok(booksDtos);
 
-            }).WithParameterValidation().Produces<List<GetBookDTO>>().
+            }).AddEndpointFilter<FiltrationEndpointFilter>().Produces<List<GetBookDTO>>().
             CacheOutput(builder=>builder.Expire(TimeSpan.FromSeconds(120)).Tag("all-books"));
 
             bookEndpoints.MapGet("{id:int}", async (int id, IBookService service, CancellationToken cancellationToken) =>

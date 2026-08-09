@@ -2,16 +2,15 @@ using System.Diagnostics;
 using System.Reflection;
 using BookStoreMinimalApi;
 using BookStoreMinimalApi.Api;
-using BookStoreMinimalApi.Application.Exceptions;
 using BookStoreMinimalApi.Data;
 using BookStoreMinimalApi.Endpoints;
-using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
+builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly, includeInternalTypes: true);
 builder.Services.AddProblemDetails();
 if (builder.Environment.IsProduction())
 {
