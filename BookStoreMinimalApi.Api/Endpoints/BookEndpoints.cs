@@ -40,7 +40,7 @@ namespace BookStoreMinimalApi.Endpoints
                 string? link = linkGenerator.GetPathByName(endpointName: "GetBookById", new { id = createdBook.BookId }, options: new LinkOptions() { LowercaseUrls = true });
                 await cache.EvictByTagAsync("all-books", default);
                 return Results.Created(link, createdBook);
-            }).WithParameterValidation().Produces<GetBookByIdDTO>(201);
+            }).AddEndpointFilter<CreateBookFilter>().Produces<GetBookByIdDTO>(201);
 
             bookEndpoints.MapPost("{id:int}/reviews", async (int id, IReviewService reviewService,
              ReviewDto reviewDto, LinkGenerator links, CancellationToken cancellationToken) =>
@@ -49,7 +49,7 @@ namespace BookStoreMinimalApi.Endpoints
                 string? link = $"{links.GetPathByName("GetBookById", new { id = id })}/reviews";
                 
                 return Results.Created(link, createdReview);
-            }).Produces(201);
+            }).AddEndpointFilter<CreateReviewFilter>().Produces(201);
 
             bookEndpoints.MapDelete("{id:int}", async (int id, IBookService service,
             IOutputCacheStore cache, CancellationToken cancellationToken) =>

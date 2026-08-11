@@ -9,11 +9,8 @@ namespace BookStoreMinimalApi.Domain.DTOs.AuthorDTOs
 {
     public class CreateAuthorDto
     {
-        [Required]
         public required string Name { get; set; }
 
-        [Required]
-        [DataType(DataType.Date)]
         public DateTime DateOfBirth { get; set; }
     }
 }

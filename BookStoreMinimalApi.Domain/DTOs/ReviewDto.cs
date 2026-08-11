@@ -11,7 +11,6 @@ namespace BookStoreMinimalApi.Domain.DTOs
     [AutoMap(typeof(Review), ReverseMap = true)]
     public class ReviewDto
     {
-        [Required]
         public double Rating { get; set; }
         public string? Description { get; set; }
     }

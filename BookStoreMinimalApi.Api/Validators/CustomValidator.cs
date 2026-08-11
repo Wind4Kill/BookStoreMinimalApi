@@ -9,7 +9,8 @@ namespace BookStoreMinimalApi.Api.Validators
 {
     public static class CustomValidator
     {
-        public static Task<FluentValidation.Results.ValidationResult> InlineValidateAsync<T>(this T obj, Action<InlineValidator<T> >configure)
+        public static Task<FluentValidation.Results.ValidationResult> InlineValidateAsync<T>(this T obj,
+         Action<InlineValidator<T>> configure)
         {
             var validator = new InlineValidator<T>();
             configure(validator);
