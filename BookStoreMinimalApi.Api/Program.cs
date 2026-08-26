@@ -14,7 +14,6 @@ builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly, includeInte
 builder.Services.AddProblemDetails();
 if (builder.Environment.IsProduction())
 {
-
       builder.Services.AddStackExchangeRedisOutputCache((options) =>
       {
             options.Configuration = builder.Configuration.GetConnectionString("RedisConnectionString");
@@ -30,7 +29,8 @@ builder.Services.AddAutoMapper(cfg =>
 builder.Services.AddDbContext<ApplicationContext>(options =>
 {
       string? connectionString = builder.Configuration.GetConnectionString("PostgreConnectionString");
-      options.UseNpgsql(connectionString, (options) => options.EnableRetryOnFailure(5, TimeSpan.FromMilliseconds(3000), null));
+      options.UseNpgsql(connectionString, (options) => options.EnableRetryOnFailure(5,
+      TimeSpan.FromMilliseconds(3000), null));
 
       if (builder.Environment.IsDevelopment())
       {

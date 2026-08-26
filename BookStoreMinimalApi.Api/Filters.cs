@@ -2,16 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using BookStoreMinimalApi.Domain.FiltrationEntities;
 
-namespace BookStoreMinimalApi.Endpoints
-{
-    public class Filters
-    {
-        public string? FilterOptions { get; set; }
+namespace BookStoreMinimalApi.Endpoints;
 
-        public string? OrderOptions { get; set; }
-
-        public string? FilterValue { get; set; }
-
-        public int? PageNum { get; set; }
-    }
-}
+public record Filters(string? FilterOptions, string? OrderOptions,
+string? FilterValue, int? PageNum);
