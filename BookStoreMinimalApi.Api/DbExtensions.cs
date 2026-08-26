@@ -1,10 +1,5 @@
-
-using BookStoreMinimalApi.Application;
 using BookStoreMinimalApi.Data;
-using BookStoreMinimalApi.Data.Repositories;
 using BookStoreMinimalApi.Domain.Entities;
-using BookStoreMinimalApi.Domain.Interfaces.Repositories;
-using BookStoreMinimalApi.Domain.Interfaces.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookStoreMinimalApi

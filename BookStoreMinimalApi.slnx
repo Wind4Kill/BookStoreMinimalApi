@@ -1,6 +1,0 @@
-<Solution>
-  <Project Path="BookStoreMinimalApi.Api/BookStoreMinimalApi.csproj" />
-  <Project Path="BookStoreMinimalApi.Application/BookStoreMinimalApi.Application.csproj" />
-  <Project Path="BookStoreMinimalApi.Data/BookStoreMinimalApi.Data.csproj" />
-  <Project Path="BookStoreMinimalApi.Domain/BookStoreMinimalApi.Domain.csproj" />
-</Solution>

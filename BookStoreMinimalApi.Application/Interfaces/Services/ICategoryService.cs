@@ -1,0 +1,15 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using BookStoreMinimalApi.Domain.DTOs.BookDTOs;
+using BookStoreMinimalApi.Domain.Entities;
+
+namespace BookStoreMinimalApi.Application.Interfaces.Services
+{
+    public interface ICategoryService
+      {
+            Task<List<Category>> CheckExistingCategories(string[] categoriesNames, CancellationToken cancellationToken);
+      }
+
+}

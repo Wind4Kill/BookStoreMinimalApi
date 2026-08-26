@@ -1,11 +1,9 @@
-using System.Collections.Immutable;
 using BookStoreMinimalApi.Api.EndpointFilters;
-using BookStoreMinimalApi.Data;
-using BookStoreMinimalApi.Domain.DTOs;
+using BookStoreMinimalApi.Application.Books.DTOs.BookDTOs;
+using BookStoreMinimalApi.Application.Books.FiltrationEntities;
+using BookStoreMinimalApi.Application.Interfaces.Services;
+using BookStoreMinimalApi.Application.Reviews.DTOs;
 using BookStoreMinimalApi.Domain.DTOs.BookDTOs;
-using BookStoreMinimalApi.Domain.Entities;
-using BookStoreMinimalApi.Domain.FiltrationEntities;
-using BookStoreMinimalApi.Domain.Interfaces.Services;
 using Microsoft.AspNetCore.OutputCaching;
 
 namespace BookStoreMinimalApi.Endpoints

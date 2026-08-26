@@ -7,11 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="16.2.0" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="10.0.10" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../BookStoreMinimalApi.Data/BookStoreMinimalApi.Data.csproj" />
+    <ProjectReference Include="../BookStoreMinimalApi.Domain/BookStoreMinimalApi.Domain.csproj" />
   </ItemGroup>
 
 </Project>

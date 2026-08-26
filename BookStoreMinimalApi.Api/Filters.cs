@@ -1,6 +1,3 @@
-using System;
-using System.ComponentModel.DataAnnotations;
-using BookStoreMinimalApi.Domain.FiltrationEntities;
 
 namespace BookStoreMinimalApi.Endpoints;
 

@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Reflection;
 using BookStoreMinimalApi;
 using BookStoreMinimalApi.Api;
+using BookStoreMinimalApi.Application;
 using BookStoreMinimalApi.Data;
 using BookStoreMinimalApi.Endpoints;
 using FluentValidation;
@@ -26,20 +27,9 @@ builder.Services.AddAutoMapper(cfg =>
 {
       cfg.AddMaps(Assembly.Load("BookStoreMinimalApi.Domain"));
 });
-builder.Services.AddDbContext<ApplicationContext>(options =>
-{
-      string? connectionString = builder.Configuration.GetConnectionString("PostgreConnectionString");
-      options.UseNpgsql(connectionString, (options) => options.EnableRetryOnFailure(5,
-      TimeSpan.FromMilliseconds(3000), null));
 
-      if (builder.Environment.IsDevelopment())
-      {
-            options.LogTo((message) => Debug.WriteLine(message), LogLevel.Information).
-            EnableSensitiveDataLogging().EnableDetailedErrors();
-      }
-});
-
-builder.Services.AddServices();
+builder.Services.AddApplication();
+builder.Services.AddData(builder.Configuration.GetConnectionString("PostgreConnectionString"));
 
 
 if (builder.Environment.IsDevelopment() || builder.Environment.IsProduction())

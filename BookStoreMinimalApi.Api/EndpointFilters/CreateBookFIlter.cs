@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BookStoreMinimalApi.Api.Validators;
-using BookStoreMinimalApi.Domain.DTOs.AuthorDTOs;
+using BookStoreMinimalApi.Application.Categories.DTOs.CategoryDTOs;
+using BookStoreMinimalApi.Application.DTOs.AuthorDTOs;
 using BookStoreMinimalApi.Domain.DTOs.BookDTOs;
-using BookStoreMinimalApi.Domain.DTOs.CategoryDTOs;
 using FluentValidation;
 
 namespace BookStoreMinimalApi.Api.EndpointFilters

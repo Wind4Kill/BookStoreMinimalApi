@@ -1,10 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using BookStoreMinimalApi.Api.Validators;
-using BookStoreMinimalApi.Domain.DTOs;
-using BookStoreMinimalApi.Domain.DTOs.AuthorDTOs;
+using BookStoreMinimalApi.Application.Reviews.DTOs;
 using FluentValidation;
 
 namespace BookStoreMinimalApi.Api.EndpointFilters
