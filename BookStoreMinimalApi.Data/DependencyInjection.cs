@@ -4,6 +4,7 @@ using BookStoreMinimalApi.Application.Interfaces.Repositories;
 using BookStoreMinimalApi.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Identity;
 
 namespace BookStoreMinimalApi.Data
 {
@@ -21,6 +22,11 @@ namespace BookStoreMinimalApi.Data
                 .LogTo((message) => Debug.WriteLine(message)).EnableSensitiveDataLogging()
                 .EnableDetailedErrors();
             });
+            services.AddIdentityCore<IdentityUser>(options =>
+            {
+                options.Password.RequiredLength = 8;
+                options.User.RequireUniqueEmail = true;
+            }).AddEntityFrameworkStores<ApplicationContext>();
 
             services.AddScoped<IBookRepository, BookRepository>();
             services.AddScoped<IReviewRepository, ReviewRepository>();

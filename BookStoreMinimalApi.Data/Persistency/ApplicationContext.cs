@@ -1,10 +1,12 @@
 ﻿using System.Reflection;
 using BookStoreMinimalApi.Domain.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookStoreMinimalApi.Data;
 
-public class ApplicationContext : DbContext
+public class ApplicationContext : IdentityDbContext<IdentityUser>
 {
       public DbSet<Book> Books { get; set; }
 
@@ -15,12 +17,14 @@ public class ApplicationContext : DbContext
 
       protected override void OnModelCreating(ModelBuilder modelBuilder)
       {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            
       }
 
       public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
       {
-            var bookEntities = ChangeTracker.Entries<Book>().Where(e=>e.State==EntityState.Added||e.State==EntityState.Modified);
+            var bookEntities = ChangeTracker.Entries<Book>().Where(e => e.State == EntityState.Added || e.State == EntityState.Modified);
             foreach (var entity in bookEntities)
             {
                   if (entity.State == EntityState.Added)
