@@ -5,6 +5,7 @@ using BookStoreMinimalApi.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Identity;
+using BookStoreMinimalApi.Data.Persistency.Repositories;
 
 namespace BookStoreMinimalApi.Data
 {
@@ -32,6 +33,7 @@ namespace BookStoreMinimalApi.Data
             services.AddScoped<IReviewRepository, ReviewRepository>();
             services.AddScoped<IAuthorRepository, AuthorRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
 
             return services;
         }

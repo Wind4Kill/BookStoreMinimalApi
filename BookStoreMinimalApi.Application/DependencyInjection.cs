@@ -4,6 +4,7 @@ using BookStoreMinimalApi.Application.Books.Services;
 using BookStoreMinimalApi.Application.Categories.Services;
 using BookStoreMinimalApi.Application.Interfaces.Services;
 using BookStoreMinimalApi.Application.Reviews.Services;
+using BookStoreMinimalApi.Application.Users.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BookStoreMinimalApi.Application
@@ -15,6 +16,7 @@ namespace BookStoreMinimalApi.Application
             services.AddScoped<IBookService, BookService>();
             services.AddScoped<IReviewService, ReviewService>();
             services.AddScoped<IAuthorService, AuthorService>();
+            services.AddScoped<IUserService, UserService>();
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddSingleton<CustomMemoryCache>();
 

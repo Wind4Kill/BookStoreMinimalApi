@@ -1,4 +1,5 @@
 using BookStoreMinimalApi.Application.Exceptions;
+using BookStoreMinimalApi.Domain.Exceptions.Users;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,7 +11,8 @@ namespace BookStoreMinimalApi.Api
         {
             var (statusCode, message) = exception switch
             {
-                EntityNotFoundException => (StatusCodes.Status404NotFound, "Entity Not Found"),
+                EntityNotFoundException => (StatusCodes.Status404NotFound, "Entity Not Found."),
+                UserRegisterValidationException =>(StatusCodes.Status400BadRequest, "Register validation data invalid."),
                 _ => (StatusCodes.Status500InternalServerError, "Interal Server Error")
             };
 
