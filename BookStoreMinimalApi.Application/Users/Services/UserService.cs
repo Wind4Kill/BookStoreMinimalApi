@@ -17,7 +17,7 @@ namespace BookStoreMinimalApi.Application.Users.Services
 
         public async Task RegisterUser(UserRegisterDTO userCredentials)
         {
-            var createdUser = new IdentityUser() { Email = userCredentials.Email };
+            var createdUser = new IdentityUser(userCredentials.Login) { Email = userCredentials.Email };
 
             await _userRepository.RegisterUser(createdUser, userCredentials.Password);
             

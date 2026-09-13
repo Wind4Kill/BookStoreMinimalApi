@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Reflection;
 using BookStoreMinimalApi;
 using BookStoreMinimalApi.Api;
+using BookStoreMinimalApi.Api.Endpoints;
 using BookStoreMinimalApi.Application;
 using BookStoreMinimalApi.Data;
 using BookStoreMinimalApi.Endpoints;
@@ -13,6 +14,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly, includeInternalTypes: true);
 builder.Services.AddProblemDetails();
+builder.Services.AddAuthentication().AddBearerToken();
+builder.Services.AddAuthorization();
 if (builder.Environment.IsProduction())
 {
       builder.Services.AddStackExchangeRedisOutputCache((options) =>
@@ -45,16 +48,21 @@ if (app.Environment.IsProduction())
       app.UseExceptionHandler();
       await app.UpdateDatabase();
 }
-
 app.UseStatusCodePages();
+app.UseRouting();
+
 if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 {
       app.UseSwagger();
       app.UseSwaggerUI();
 }
 
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseOutputCache();
+
 app.AddBookEndpoints();
+app.AddUserEndpoints();
 
 if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 {
