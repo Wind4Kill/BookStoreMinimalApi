@@ -26,7 +26,8 @@ namespace BookStoreMinimalApi.Data
             });
             services.AddIdentityCore<IdentityUser>(options =>
             {
-                options.Password.RequiredLength = 8;
+                options.Password.RequiredLength = 8; ;
+                options.Password.RequireDigit = true;
                 options.User.RequireUniqueEmail = true;
             }).AddEntityFrameworkStores<ApplicationContext>();
 

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BookStoreMinimalApi.Application.Interfaces.Services;
 using BookStoreMinimalApi.Application.Users.DTOs;
+using BookStoreMinimalApi.Domain.Exceptions.Users;
 using Microsoft.AspNetCore.Identity;
 
 namespace BookStoreMinimalApi.Data.Services
@@ -20,9 +21,14 @@ namespace BookStoreMinimalApi.Data.Services
         public async Task RegisterUser(UserRegisterDTO userCredentials)
         {
             IdentityUser createdUser = new IdentityUser(userCredentials.Login) { Email = userCredentials.Email };
-            _userManager.PasswordHasher.HashPassword(createdUser, userCredentials.Password);
 
-            await _userManager.CreateAsync(createdUser);
+            var result = await _userManager.CreateAsync(createdUser, userCredentials.Password);
+
+            if (!result.Succeeded)
+            {
+                string errorMessage = string.Join(", ", result.Errors);
+                throw new UserRegisterValidationException(errorMessage);
+            }
         }
     }
 }
