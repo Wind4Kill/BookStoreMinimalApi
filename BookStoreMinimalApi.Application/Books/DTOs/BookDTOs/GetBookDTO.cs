@@ -1,6 +1,4 @@
-using AutoMapper;
 using BookStoreMinimalApi.Application.Categories.DTOs.CategoryDTOs;
-using BookStoreMinimalApi.Data;
 
 namespace BookStoreMinimalApi.Application.Books.DTOs.BookDTOs
 {
