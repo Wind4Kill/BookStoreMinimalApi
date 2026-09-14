@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace BookStoreMinimalApi.Domain.Exceptions.Users
 {
-    public class UserRegisterValidationException:Exception
+    public class UserNotFoundException : Exception
     {
-        public UserRegisterValidationException(string message):base(message) {}
+        public UserNotFoundException(string message) : base(message) { }
     }
 }

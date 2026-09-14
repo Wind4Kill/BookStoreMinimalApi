@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BookStoreMinimalApi.Api.EndpointFilters;
 using BookStoreMinimalApi.Application.Interfaces.Services;
+using BookStoreMinimalApi.Application.Users;
 using BookStoreMinimalApi.Application.Users.DTOs;
 
 namespace BookStoreMinimalApi.Api.Endpoints
@@ -17,13 +18,18 @@ namespace BookStoreMinimalApi.Api.Endpoints
             userEndpoints.MapPost("register", async (UserRegisterDTO userCredentials, IUserService userService) =>
             {
                 await userService.RegisterUser(userCredentials);
-                return Results.Created();
+                return Results.Ok();
 
             }).AddEndpointFilter<UserRegisterFilter>()
             .Produces(200).ProducesValidationProblem();
-            
-            
 
+            userEndpoints.MapPost("", async (UserLoginDTO userCredentials, IUserService userService) =>
+            {
+                await userService.Login(userCredentials);
+                return Results.Ok();
+            }).Produces(200).ProducesValidationProblem();
         }
+
+
     }
 }

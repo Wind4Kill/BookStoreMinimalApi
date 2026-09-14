@@ -12,7 +12,8 @@ namespace BookStoreMinimalApi.Api
             var (statusCode, message) = exception switch
             {
                 EntityNotFoundException => (StatusCodes.Status404NotFound, "Entity Not Found."),
-                UserRegisterValidationException =>(StatusCodes.Status400BadRequest, "Register validation data invalid."),
+                UserCredentialsValidationException => (StatusCodes.Status400BadRequest, "Register validation data invalid."),
+                UserNotFoundException => (StatusCodes.Status404NotFound, "Requested user wasn't found."),
                 _ => (StatusCodes.Status500InternalServerError, "Interal Server Error")
             };
 
@@ -24,7 +25,7 @@ namespace BookStoreMinimalApi.Api
             };
 
             httpContext.Response.StatusCode = statusCode;
-            await httpContext.Response.WriteAsJsonAsync(details, default);
+            await httpContext.Response.WriteAsJsonAsync(details, cancellationToken);
             return true;
         }
     }
