@@ -9,7 +9,6 @@ using BookStoreMinimalApi.Domain.Entities;
 
 namespace BookStoreMinimalApi.Application.Books.DTOs.BookDTOs
 {
-    [AutoMap(typeof(Book))]
     public class GetBookByIdDTO
     {
         public int BookId { get; set; }

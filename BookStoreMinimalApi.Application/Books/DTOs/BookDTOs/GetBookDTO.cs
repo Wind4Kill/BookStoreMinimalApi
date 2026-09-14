@@ -4,7 +4,6 @@ using BookStoreMinimalApi.Data;
 
 namespace BookStoreMinimalApi.Application.Books.DTOs.BookDTOs
 {
-    [AutoMap(typeof(Book))]
     public class GetBookDTO
     {
         public int BookId { get; set; }
