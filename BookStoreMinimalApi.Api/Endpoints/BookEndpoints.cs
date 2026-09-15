@@ -12,7 +12,7 @@ namespace BookStoreMinimalApi.Endpoints
     {
         public static void AddBookEndpoints(this WebApplication app)
         {
-            var bookEndpoints = app.MapGroup("api/books").WithTags("Books").RequireAuthorization();
+            var bookEndpoints = app.MapGroup("api/books").WithTags("Books");
             
             bookEndpoints.MapGet("", async ([AsParameters] Filters filters, IBookService service, CancellationToken cancellationToken) =>
             {
@@ -23,7 +23,7 @@ namespace BookStoreMinimalApi.Endpoints
                 return Results.Ok(booksDtos);
 
             }).AddEndpointFilter<FiltrationEndpointFilter>().Produces<List<GetBookDTO>>().
-            CacheOutput(builder=>builder.Expire(TimeSpan.FromSeconds(120)).Tag("all-books"));
+            CacheOutput(builder=>builder.Expire(TimeSpan.FromSeconds(120)).Tag("all-books")).RequireAuthorization();
 
             bookEndpoints.MapGet("{id:int}", async (int id, IBookService service, CancellationToken cancellationToken) =>
             {

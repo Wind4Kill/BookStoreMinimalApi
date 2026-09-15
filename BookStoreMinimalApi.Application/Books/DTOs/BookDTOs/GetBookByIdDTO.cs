@@ -2,11 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using BookStoreMinimalApi.Application.Categories.DTOs.CategoryDTOs;
+using BookStoreMinimalApi.Data;
 using BookStoreMinimalApi.Domain.Entities;
 
 namespace BookStoreMinimalApi.Application.Books.DTOs.BookDTOs
 {
+    [AutoMap(typeof(Book))]
     public class GetBookByIdDTO
     {
         public int BookId { get; set; }

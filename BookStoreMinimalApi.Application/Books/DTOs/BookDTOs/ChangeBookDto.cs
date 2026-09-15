@@ -2,9 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using BookStoreMinimalApi.Data;
 
 namespace BookStoreMinimalApi.Application.Books.DTOs.BookDTOs
 {
+    [AutoMap(typeof(Book), ReverseMap =true)]
     public class ChangeBookDto
     {
         public string? Title { get; set; }
