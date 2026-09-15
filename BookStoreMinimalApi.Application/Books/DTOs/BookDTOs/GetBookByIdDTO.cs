@@ -17,6 +17,8 @@ namespace BookStoreMinimalApi.Application.Books.DTOs.BookDTOs
 
         public decimal Cost { get; set; }
 
+        public double Rating { get; set; }
+
         public required string Description { get; set; }
 
         public required string AuthorName { get; set; }

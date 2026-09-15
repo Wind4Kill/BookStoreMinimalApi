@@ -10,6 +10,8 @@ namespace BookStoreMinimalApi.Application.Books.DTOs.BookDTOs
         public int BookId { get; set; }
         public required string Title { get; set; }
         public decimal Cost { get; set; }
+
+        public double Rating { get; set; }
         public required string AuthorName { get; set; }
 
         public ICollection<CategoryDTO> Categories { get; set; } = null!;

@@ -8,6 +8,5 @@ namespace BookStoreMinimalApi.Application.Interfaces.Repositories
 {
     public interface IReviewRepository
     {
-        Task<Review> AddReview(Review review, CancellationToken cancellationToken);
     }
 }

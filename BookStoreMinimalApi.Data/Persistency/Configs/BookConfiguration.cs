@@ -15,6 +15,7 @@ namespace BookStoreMinimalApi.Data.Configs
 
             builder.Property<DateTime>("CreatedAt").HasColumnType("date");
             builder.Property<DateTime>("UpdatedAt").HasColumnType("date");
+            builder.Property(b => b.Rating).HasField("_rating");
         }
 
     }

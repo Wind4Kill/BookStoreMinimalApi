@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using BookStoreMinimalApi.Api.EndpointFilters;
 using BookStoreMinimalApi.Application.Books.DTOs.BookDTOs;
 using BookStoreMinimalApi.Application.Books.FiltrationEntities;
@@ -29,7 +30,7 @@ namespace BookStoreMinimalApi.Endpoints
             {
                 GetBookByIdDTO requestedBookDto = await service.GetBookById(id, cancellationToken);
                 return Results.Ok(requestedBookDto);
-            }).CacheOutput().Produces<GetBookByIdDTO>().ProducesProblem(statusCode:404).WithName("GetBookById");
+            }).Produces<GetBookByIdDTO>().ProducesProblem(statusCode:404).WithName("GetBookById");
 
             bookEndpoints.MapPost("", async (CreateBookDto bookDto, IBookService service, LinkGenerator linkGenerator,
             IOutputCacheStore cache, CancellationToken cancellationToken) =>

@@ -22,6 +22,16 @@ namespace BookStoreMinimalApi.Data
         public ICollection<Review>? Reviews { get; set; }
 
         public int AuthorId { get; set; }
+        private double _rating;
+        public double Rating => _rating;
+
+        public void EvaluateRating()
+        {
+            if(Reviews is not null)
+            {
+                _rating = Reviews.Average(r => r.Rating);
+            }
+        }
 
     }
 }

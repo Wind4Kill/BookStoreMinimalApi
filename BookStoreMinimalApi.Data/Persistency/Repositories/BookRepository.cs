@@ -35,7 +35,8 @@ namespace BookStoreMinimalApi.Data.Repositories
             IQueryable<Book> orderedBooks = OrderEntities(_context.Books.AsSplitQuery()
             .AsNoTracking()
             .Include(b => b.Author)
-            .Include(b => b.Categories), filterOptions.OrderOptions);
+            .Include(b => b.Categories)
+            .Include(b=>b.Reviews), filterOptions.OrderOptions);
 
             IQueryable<Book> filteredBooks = FilterEntities(orderedBooks, filterOptions.FilterOptions,
             filterOptions.FilterValue!);
