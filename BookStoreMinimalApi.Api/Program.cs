@@ -1,20 +1,37 @@
 using System.Diagnostics;
 using System.Reflection;
+using System.Text;
 using BookStoreMinimalApi;
 using BookStoreMinimalApi.Api;
 using BookStoreMinimalApi.Api.Endpoints;
 using BookStoreMinimalApi.Application;
+using BookStoreMinimalApi.Application.Authorization;
 using BookStoreMinimalApi.Data;
 using BookStoreMinimalApi.Endpoints;
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly, includeInternalTypes: true);
+builder.Services.Configure<JwtTokenSettings>(builder.Configuration.GetSection("Jwt"));
 builder.Services.AddProblemDetails();
-builder.Services.AddAuthentication().AddBearerToken();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+{
+      options.TokenValidationParameters = new TokenValidationParameters
+      {
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"]!)),
+            ClockSkew = TimeSpan.Zero
+      };
+});
 builder.Services.AddAuthorization();
 if (builder.Environment.IsProduction())
 {
@@ -28,7 +45,7 @@ if (builder.Environment.IsProduction())
 builder.Services.AddOutputCache();
 builder.Services.AddAutoMapper(cfg =>
 {
-      cfg.AddMaps(Assembly.Load("BookStoreMinimalApi.Domain"));
+      cfg.AddMaps(Assembly.Load("BookStoreMinimalApi.Application"));
 });
 
 builder.Services.AddApplication();

@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BookStoreMinimalApi.Api.EndpointFilters;
+using BookStoreMinimalApi.Application.Authorization;
 using BookStoreMinimalApi.Application.Interfaces.Services;
 using BookStoreMinimalApi.Application.Users;
 using BookStoreMinimalApi.Application.Users.DTOs;
+using Microsoft.Extensions.Options;
 
 namespace BookStoreMinimalApi.Api.Endpoints
 {
@@ -23,13 +25,11 @@ namespace BookStoreMinimalApi.Api.Endpoints
             }).AddEndpointFilter<UserRegisterFilter>()
             .Produces(200).ProducesValidationProblem();
 
-            userEndpoints.MapPost("", async (UserLoginDTO userCredentials, IUserService userService) =>
+            userEndpoints.MapPost("login", async (UserLoginDTO userCredentials, IUserService userService) =>
             {
-                await userService.Login(userCredentials);
-                return Results.Ok();
-            }).Produces(200).ProducesValidationProblem();
+                string token = await userService.Login(userCredentials);
+                return Results.Ok(token);
+            }).AddEndpointFilter<UserLoginFilter>().Produces<string>(200).ProducesValidationProblem();
         }
-
-
     }
 }

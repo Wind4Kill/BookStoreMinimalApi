@@ -1,8 +1,11 @@
+using AutoMapper;
 using BookStoreMinimalApi.Application.Categories.DTOs.CategoryDTOs;
+using BookStoreMinimalApi.Data;
 
 namespace BookStoreMinimalApi.Application.Books.DTOs.BookDTOs
 {
-    public class GetBookDTO
+    [AutoMap(typeof(Book))]
+        public class GetBookDTO
     {
         public int BookId { get; set; }
         public required string Title { get; set; }

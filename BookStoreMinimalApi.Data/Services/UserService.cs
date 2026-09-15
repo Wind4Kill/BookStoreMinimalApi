@@ -1,22 +1,28 @@
 
+using BookStoreMinimalApi.Application.Authorization;
+using BookStoreMinimalApi.Application.Interfaces.Abstractions;
+using BookStoreMinimalApi.Application.Interfaces.Abstractions.Authorization;
 using BookStoreMinimalApi.Application.Interfaces.Services;
 using BookStoreMinimalApi.Application.Users;
 using BookStoreMinimalApi.Application.Users.DTOs;
 using BookStoreMinimalApi.Domain.Exceptions.Users;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 
 namespace BookStoreMinimalApi.Data.Services
 {
     public class UserService : IUserService
     {
         readonly UserManager<IdentityUser> _userManager;
+        readonly ITokenProvider _tokenProvider;
 
-        public UserService(UserManager<IdentityUser> userManager)
+        public UserService(UserManager<IdentityUser> userManager, ITokenProvider tokenProvider)
         {
             _userManager = userManager;
+            _tokenProvider = tokenProvider;
         }
 
-        public async Task Login(UserLoginDTO userCredentials)
+        public async Task<string> Login(UserLoginDTO userCredentials)
         {
             var requestedUser = await _userManager.FindByEmailAsync(userCredentials.Email);
             if (requestedUser is null)
@@ -29,7 +35,10 @@ namespace BookStoreMinimalApi.Data.Services
             {
                 throw new UserCredentialsValidationException("Provided user data is wrong.");
             }
-            
+
+            string token = _tokenProvider.GenerateToken(requestedUser);
+
+            return token;
 
         }
 

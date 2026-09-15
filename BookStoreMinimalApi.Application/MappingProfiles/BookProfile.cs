@@ -14,11 +14,6 @@ namespace BookStoreMinimalApi.Application.MappingProfiles
         public BookProfile()
         {
             CreateMap<ChangeBookDto, Book>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember is not null));
-            CreateMap<Book, GetBookDTO>().ForMember(dest => dest.BookId, opt => opt.MapFrom(b => b.BookId))
-            .ForMember(dest => dest.Title, opt => opt.MapFrom(b => b.Title))
-            .ForMember(dest => dest.Cost, opt => opt.MapFrom(b => b.Cost))
-            .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(b => b.Author.Name))
-            .ForMember(dest => dest.Categories, opt => opt.MapFrom(c => c.Categories));
 
             CreateMap<Book, GetBookByIdDTO>().ForMember(dest => dest.BookId,
             opt => opt.MapFrom(b => b.BookId))

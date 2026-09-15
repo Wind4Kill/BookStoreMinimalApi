@@ -1,6 +1,6 @@
 
 using BookStoreMinimalApi.Api.Validators;
-using BookStoreMinimalApi.Application.Users;
+using BookStoreMinimalApi.Application.Users.DTOs;
 using FluentValidation;
 
 namespace BookStoreMinimalApi.Api.EndpointFilters

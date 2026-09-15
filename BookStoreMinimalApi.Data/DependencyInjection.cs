@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 
 using System.Diagnostics;
 using BookStoreMinimalApi.Application.Interfaces.Repositories;
@@ -7,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Identity;
 using BookStoreMinimalApi.Application.Interfaces.Services;
 using BookStoreMinimalApi.Data.Services;
+using BookStoreMinimalApi.Application.Interfaces.Abstractions.Authorization;
 
 namespace BookStoreMinimalApi.Data
 {
@@ -36,7 +38,8 @@ namespace BookStoreMinimalApi.Data
             services.AddScoped<IAuthorRepository, AuthorRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IUserService, UserService>();
-
+            services.AddScoped<ITokenProvider, JwtTokenProvider>();
+            
             return services;
         }
     }
