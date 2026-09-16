@@ -10,7 +10,6 @@ using BookStoreMinimalApi.Application.Users.DTOs;
 using BookStoreMinimalApi.Domain.Entities;
 using BookStoreMinimalApi.Domain.Exceptions.Users;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Options;
 
 namespace BookStoreMinimalApi.Data.Services
 {
@@ -30,10 +29,12 @@ namespace BookStoreMinimalApi.Data.Services
         public async Task<string> Login(UserLoginDTO userCredentials)
         {
             var requestedUser = await _userManager.FindByEmailAsync(userCredentials.Email);
+
             if (requestedUser is null)
             {
                 throw new UserNotFoundException("Requested user wasn't found.");
             }
+
             bool isPasswordValid = await _userManager.CheckPasswordAsync(requestedUser, userCredentials.Password);
 
             if (!isPasswordValid)
@@ -41,7 +42,10 @@ namespace BookStoreMinimalApi.Data.Services
                 throw new UserCredentialsValidationException("Provided user data is wrong.");
             }
 
-            string token = _tokenProvider.GenerateToken(requestedUser);
+            var claims = (await _userManager.GetClaimsAsync(requestedUser)).ToList();
+
+            string token = _tokenProvider.GenerateToken(requestedUser, claims);
+        
 
             return token;
 
@@ -51,6 +55,12 @@ namespace BookStoreMinimalApi.Data.Services
         {
             User createdUser = new User(userCredentials.Login) { Email = userCredentials.Email };
 
+            List<Claim> claims = new()
+            {
+                new Claim("Role", "User")
+            };
+
+
             var result = await _userManager.CreateAsync(createdUser, userCredentials.Password);
 
             if (!result.Succeeded)
@@ -58,6 +68,7 @@ namespace BookStoreMinimalApi.Data.Services
                 string errorMessage = string.Join(", ", result.Errors.Select(e => e.Description));
                 throw new UserCredentialsValidationException(errorMessage);
             }
+            await _userManager.AddClaimsAsync(createdUser, claims);
         }
 
         public async Task AddReviewToUser(ClaimsPrincipal claims, Review review)

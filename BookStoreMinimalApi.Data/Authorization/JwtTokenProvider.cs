@@ -17,22 +17,26 @@ namespace BookStoreMinimalApi.Data.Services
 {
       public class JwtTokenProvider(IOptions<JwtTokenSettings> jwtSettings) : ITokenProvider
       {
-            public string GenerateToken(User user)
+            public string GenerateToken(User user, List<Claim> claims)
             {
                   var secretKey = jwtSettings.Value.SecretKey;
                   var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
                   var credentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
 
-                  List<Claim> claims = new List<Claim>()
+
+                  List<Claim> userClaims = new List<Claim>()
                  {
                         new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub, user.Id),
                         new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Nickname, user.UserName!),
-                        new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Email, user.Email!),
+                        new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Email, user.Email!)
                  };
+
+                  userClaims.AddRange(claims);
+                 
 
                   var descriptor = new SecurityTokenDescriptor()
                   {
-                        Subject = new ClaimsIdentity(claims),
+                        Subject = new ClaimsIdentity(userClaims),
                         Issuer = jwtSettings.Value.Issuer,
                         Audience = jwtSettings.Value.Audience,
                         Expires = DateTime.UtcNow.AddMinutes(jwtSettings.Value.Expiration),

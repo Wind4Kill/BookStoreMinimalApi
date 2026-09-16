@@ -12,6 +12,6 @@ namespace BookStoreMinimalApi.Application.Interfaces.Abstractions.Authorization
 {
     public interface ITokenProvider
     {
-        public string GenerateToken(User user);
+        public string GenerateToken(User user, List<Claim> claims);
     }
 }
