@@ -14,17 +14,17 @@ namespace BookStoreMinimalApi.Endpoints
         public static void AddBookEndpoints(this WebApplication app)
         {
             var bookEndpoints = app.MapGroup("api/books").WithTags("Books");
-            
+
             bookEndpoints.MapGet("", async ([AsParameters] Filters filters, IBookService service, CancellationToken cancellationToken) =>
             {
                 Filtration filtration = new(filterOptions: filters.FilterOptions, orderOptions: filters.OrderOptions,
                 filterValue: filters.FilterValue, pageNum: filters.PageNum);
-               
+
                 List<GetBookDTO>? booksDtos = await service.GetAllBooks(filtration, cancellationToken);
                 return Results.Ok(booksDtos);
 
             }).AddEndpointFilter<FiltrationEndpointFilter>().Produces<List<GetBookDTO>>().
-            CacheOutput(builder=>builder.Expire(TimeSpan.FromSeconds(120)).Tag("all-books")).RequireAuthorization();
+            CacheOutput(builder => builder.Expire(TimeSpan.FromSeconds(120)).Tag("all-books"));
 
             bookEndpoints.MapGet("{id:int}", async (int id, IBookService service, CancellationToken cancellationToken) =>
             {
@@ -56,7 +56,7 @@ namespace BookStoreMinimalApi.Endpoints
                 await service.DeleteBook(id, cancellationToken);
                 await cache.EvictByTagAsync("all-books", default);
                 return Results.NoContent();
-            }).Produces(204).ProducesProblem(statusCode:404);
+            }).Produces(204).ProducesProblem(statusCode:404).RequireAuthorization();
 
             bookEndpoints.MapPut("{id:int}", async (int id, ChangeBookDto changeBookDto,
             IBookService service, IOutputCacheStore cache, CancellationToken cancellationToken) =>
@@ -64,7 +64,8 @@ namespace BookStoreMinimalApi.Endpoints
                 await service.UpdateBook(id, changeBookDto, cancellationToken);
                 await cache.EvictByTagAsync("all-books", default);
                 return Results.NoContent();
-            }).Produces(204).ProducesProblem(statusCode:404);
+            }).AddEndpointFilter<ChangeBookFilter>().Produces(204)
+            .ProducesProblem(statusCode:404).RequireAuthorization();
 
         }
 
