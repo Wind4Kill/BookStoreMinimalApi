@@ -57,7 +57,7 @@ namespace BookStoreMinimalApi.Endpoints
                 await service.DeleteBook(id, cancellationToken);
                 await cache.EvictByTagAsync("all-books", default);
                 return Results.NoContent();
-            }).Produces(204).ProducesProblem(statusCode:404).RequireAuthorization();
+            }).Produces(204).ProducesProblem(statusCode:404).RequireAuthorization("IsAdmin");
 
             bookEndpoints.MapPut("{id:int}", async (int id, ChangeBookDto changeBookDto,
             IBookService service, IOutputCacheStore cache, CancellationToken cancellationToken) =>
@@ -66,7 +66,7 @@ namespace BookStoreMinimalApi.Endpoints
                 await cache.EvictByTagAsync("all-books", default);
                 return Results.NoContent();
             }).AddEndpointFilter<ChangeBookFilter>().Produces(204)
-            .ProducesProblem(statusCode:404).RequireAuthorization();
+            .ProducesProblem(statusCode:404).RequireAuthorization("IsAdmin");
 
         }
 

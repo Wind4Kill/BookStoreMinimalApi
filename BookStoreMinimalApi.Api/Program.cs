@@ -31,7 +31,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
             ClockSkew = TimeSpan.Zero
       };
 });
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(policy =>
+{
+      policy.AddPolicy("IsAdmin", opts => opts.RequireClaim("Role",["Admin"]).RequireClaim("nickname", ["Admin"]));
+});
 if (builder.Environment.IsProduction())
 {
       builder.Services.AddStackExchangeRedisOutputCache((options) =>
@@ -71,6 +74,8 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 {
       app.UseSwagger();
       app.UseSwaggerUI();
+      //Remove in prod
+      await app.AddAdministrator();
 }
 
 app.UseAuthentication();
