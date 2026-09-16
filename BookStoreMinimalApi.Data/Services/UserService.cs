@@ -1,10 +1,13 @@
 
+using System.Security.Claims;
 using BookStoreMinimalApi.Application.Authorization;
+using BookStoreMinimalApi.Application.Exceptions;
 using BookStoreMinimalApi.Application.Interfaces.Abstractions;
 using BookStoreMinimalApi.Application.Interfaces.Abstractions.Authorization;
 using BookStoreMinimalApi.Application.Interfaces.Services;
 using BookStoreMinimalApi.Application.Users;
 using BookStoreMinimalApi.Application.Users.DTOs;
+using BookStoreMinimalApi.Domain.Entities;
 using BookStoreMinimalApi.Domain.Exceptions.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
@@ -13,11 +16,13 @@ namespace BookStoreMinimalApi.Data.Services
 {
     public class UserService : IUserService
     {
-        readonly UserManager<IdentityUser> _userManager;
+        readonly ApplicationContext _dbContext;
+        readonly UserManager<User> _userManager;
         readonly ITokenProvider _tokenProvider;
 
-        public UserService(UserManager<IdentityUser> userManager, ITokenProvider tokenProvider)
+        public UserService(ApplicationContext dbContext, UserManager<User> userManager, ITokenProvider tokenProvider)
         {
+            _dbContext = dbContext;
             _userManager = userManager;
             _tokenProvider = tokenProvider;
         }
@@ -44,15 +49,26 @@ namespace BookStoreMinimalApi.Data.Services
 
         public async Task RegisterUser(UserRegisterDTO userCredentials)
         {
-            IdentityUser createdUser = new IdentityUser(userCredentials.Login) { Email = userCredentials.Email };
+            User createdUser = new User(userCredentials.Login) { Email = userCredentials.Email };
 
             var result = await _userManager.CreateAsync(createdUser, userCredentials.Password);
 
             if (!result.Succeeded)
             {
-                string errorMessage = string.Join(", ", result.Errors.Select(e=>e.Description));
+                string errorMessage = string.Join(", ", result.Errors.Select(e => e.Description));
                 throw new UserCredentialsValidationException(errorMessage);
             }
+        }
+
+        public async Task AddReviewToUser(ClaimsPrincipal claims, Review review)
+        {
+            User? requestedUser = await _userManager.GetUserAsync(claims);
+            if (requestedUser is null)
+            {
+                throw new EntityNotFoundException("User wasn't found.");
+            }
+            await _dbContext.Entry(requestedUser).Collection(ru => ru.Reviews).LoadAsync();
+            requestedUser.Reviews.Add(review);
         }
     }
 }

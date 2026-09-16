@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using System.Security.Claims;
 using BookStoreMinimalApi.Api.EndpointFilters;
 using BookStoreMinimalApi.Application.Books.DTOs.BookDTOs;
 using BookStoreMinimalApi.Application.Books.FiltrationEntities;
@@ -42,13 +43,13 @@ namespace BookStoreMinimalApi.Endpoints
             }).AddEndpointFilter<CreateBookFilter>().Produces<GetBookByIdDTO>(201);
 
             bookEndpoints.MapPost("{id:int}/reviews", async (int id, IReviewService reviewService,
-             ReviewDto reviewDto, LinkGenerator links, CancellationToken cancellationToken) =>
+             ReviewDto reviewDto, LinkGenerator links, CancellationToken cancellationToken, ClaimsPrincipal claims) =>
             {
-                ReviewDto createdReview = await reviewService.AddReview(id, reviewDto, cancellationToken);
+                ReviewDto createdReview = await reviewService.AddReview(id, reviewDto, claims, cancellationToken);
                 string? link = $"{links.GetPathByName("GetBookById", new { id = id })}/reviews";
                 
                 return Results.Created(link, createdReview);
-            }).AddEndpointFilter<CreateReviewFilter>().Produces(201);
+            }).AddEndpointFilter<CreateReviewFilter>().Produces(201).RequireAuthorization();
 
             bookEndpoints.MapDelete("{id:int}", async (int id, IBookService service,
             IOutputCacheStore cache, CancellationToken cancellationToken) =>

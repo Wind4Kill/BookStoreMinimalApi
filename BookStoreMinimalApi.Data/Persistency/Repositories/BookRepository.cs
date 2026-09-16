@@ -57,11 +57,6 @@ namespace BookStoreMinimalApi.Data.Repositories
             .Include(b => b.Reviews)
             .SingleOrDefaultAsync(b => b.BookId == id, cancellationToken);
         }
-        public async Task UpdateBook(CancellationToken cancellationToken)
-        {
-            await _context.SaveChangesAsync(cancellationToken);
-        }
-        
          private  IQueryable<Book> FilterEntities( IQueryable<Book> books, FilterOptions options, string filterValue)
         {
             return options switch

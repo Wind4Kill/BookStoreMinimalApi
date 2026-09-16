@@ -6,12 +6,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookStoreMinimalApi.Data;
 
-public class ApplicationContext : IdentityDbContext<IdentityUser>
+public class ApplicationContext : IdentityDbContext<User>
 {
       public DbSet<Book> Books { get; set; }
-
       public DbSet<Author> Authors { get; set; }
-
       public DbSet<Category> Categories { get; set; }
       public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options) { }
 

@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Identity;
 using BookStoreMinimalApi.Application.Interfaces.Services;
 using BookStoreMinimalApi.Data.Services;
 using BookStoreMinimalApi.Application.Interfaces.Abstractions.Authorization;
+using BookStoreMinimalApi.Domain.Entities;
+using BookStoreMinimalApi.Application.Interfaces.Abstractions;
+using BookStoreMinimalApi.Data.Persistency;
 
 namespace BookStoreMinimalApi.Data
 {
@@ -26,7 +29,7 @@ namespace BookStoreMinimalApi.Data
                 .LogTo((message) => Debug.WriteLine(message)).EnableSensitiveDataLogging()
                 .EnableDetailedErrors();
             });
-            services.AddIdentityCore<IdentityUser>(options =>
+            services.AddIdentityCore<User>(options =>
             {
                 options.Password.RequiredLength = 8; ;
                 options.Password.RequireDigit = true;
@@ -39,6 +42,7 @@ namespace BookStoreMinimalApi.Data
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ITokenProvider, JwtTokenProvider>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             
             return services;
         }

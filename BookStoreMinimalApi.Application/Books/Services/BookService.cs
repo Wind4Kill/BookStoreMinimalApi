@@ -9,22 +9,26 @@ using BookStoreMinimalApi.Domain.Entities;
 using BookStoreMinimalApi.Data;
 using BookStoreMinimalApi.Application.Books.FiltrationEntities;
 using BookStoreMinimalApi.Application.Exceptions;
+using BookStoreMinimalApi.Application.Interfaces.Abstractions;
 namespace BookStoreMinimalApi.Application.Books.Services
 {
     public class BookService : IBookService
     {
+        readonly IUnitOfWork _unitOfWork;
         readonly IAuthorService _authorService;
         readonly IBookRepository _bookRepository;
         readonly ICategoryService _categoryService;
         readonly IMapper _mapper;
         readonly CustomMemoryCache _cache;
 
-        public BookService(IBookRepository bookRepository,
+        public BookService(IUnitOfWork unitOfWork,
+        IBookRepository bookRepository,
         IAuthorService authorService,
         ICategoryService categoryService,
         IMapper mapper,
         CustomMemoryCache cache)
         {
+            _unitOfWork = unitOfWork;
             _bookRepository = bookRepository;
             _authorService = authorService;
             _categoryService = categoryService;
@@ -93,7 +97,7 @@ namespace BookStoreMinimalApi.Application.Books.Services
 
             _mapper.Map(changeBook, requestedBook);
 
-            await _bookRepository.UpdateBook(cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             string key = GetKeyById(id);
 
@@ -110,7 +114,6 @@ namespace BookStoreMinimalApi.Application.Books.Services
             }
             return requestedBook;
         }
-
         private string GetKeyById(int id) => $"Book:{id}";
 
     }

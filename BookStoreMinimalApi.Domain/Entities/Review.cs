@@ -14,5 +14,7 @@ namespace BookStoreMinimalApi.Domain.Entities
         public string? Description { get; set; }
         
         public int BookId { get; set; }
+
+        public string UserId { get; set; } = null!;
     }
 }

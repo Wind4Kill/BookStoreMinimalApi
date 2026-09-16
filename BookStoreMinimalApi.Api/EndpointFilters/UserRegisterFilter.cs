@@ -22,7 +22,7 @@ namespace BookStoreMinimalApi.Api.EndpointFilters
                 {
                     return login.ToLower() != "admin";
                 }).WithMessage("\"Admin\" can't be used as Login name.")
-                .MinimumLength(8).WithMessage("Login can't be shorter than 15 symbols.")
+                .MinimumLength(5).WithMessage("Login can't be shorter than 5 symbols.")
                 .MaximumLength(30).WithMessage("Login length can't exceed 30 symbols.");
             });
 
