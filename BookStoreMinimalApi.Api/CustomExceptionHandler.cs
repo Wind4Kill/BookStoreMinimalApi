@@ -21,6 +21,7 @@ namespace BookStoreMinimalApi.Api
             {
                 Title = message,
                 Status = statusCode,
+                Detail=exception.Message
             };
 
             httpContext.Response.StatusCode = statusCode;
