@@ -17,17 +17,15 @@ namespace BookStoreMinimalApi.Data.Repositories
             _context = context;
         }
 
-        public async Task<Book> AddBook(Book book, CancellationToken cancellationToken)
+        public async Task<Book> AddBook(Book book)
         {
             _context.Add(book);
-            await _context.SaveChangesAsync(cancellationToken);
             return book;
         }
 
-        public async Task DeleteBook(Book book, CancellationToken cancellationToken)
+        public async Task DeleteBook(Book book)
         {
             book.IsDeleted = true;
-            await _context.SaveChangesAsync(cancellationToken);
         }
 
         public async Task<List<Book>> GetAllBooks(Filtration filterOptions, CancellationToken cancellationToken)

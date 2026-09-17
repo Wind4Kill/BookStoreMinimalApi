@@ -1,6 +1,5 @@
 using BookStoreMinimalApi.Domain.DTOs.BookDTOs;
 using Microsoft.Extensions.Caching.Memory;
-using BookStoreMinimalApi.Api.Endpoints;
 using BookStoreMinimalApi.Application.Interfaces.Services;
 using BookStoreMinimalApi.Application.Interfaces.Repositories;
 using AutoMapper;
@@ -10,6 +9,7 @@ using BookStoreMinimalApi.Data;
 using BookStoreMinimalApi.Application.Books.FiltrationEntities;
 using BookStoreMinimalApi.Application.Exceptions;
 using BookStoreMinimalApi.Application.Interfaces.Abstractions;
+using BookStoreMinimalApi.Api.Endpoints;
 namespace BookStoreMinimalApi.Application.Books.Services
 {
     public class BookService : IBookService
@@ -53,7 +53,8 @@ namespace BookStoreMinimalApi.Application.Books.Services
                 Categories = bookCategories
             };
 
-            createdBook = await _bookRepository.AddBook(createdBook, cancellationToken);
+            createdBook = await _bookRepository.AddBook(createdBook);
+           await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             GetBookByIdDTO mappedBook = _mapper.Map<GetBookByIdDTO>(createdBook);
             return mappedBook;
@@ -62,7 +63,8 @@ namespace BookStoreMinimalApi.Application.Books.Services
         public async Task DeleteBook(int id, CancellationToken cancellationToken)
         {
             Book requestedBook = await CheckIfBookExistsOrThrowException(id, cancellationToken);
-            await _bookRepository.DeleteBook(requestedBook, cancellationToken);
+            await _bookRepository.DeleteBook(requestedBook);
+            await _unitOfWork.SaveChangesAsync();
             string key = GetKeyById(id);
             _cache.Cache.Remove(key);
         }
