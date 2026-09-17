@@ -17,9 +17,9 @@ namespace BookStoreMinimalApi.Api.Endpoints
         {
             var userEndpoints = app.MapGroup("api/users").WithTags("Users");
 
-            userEndpoints.MapPost("register", async (UserRegisterDTO userCredentials, IUserService userService) =>
+            userEndpoints.MapPost("register", async (UserRegisterDTO userCredentials, IUserService userService, CancellationToken cancellationToken) =>
             {
-                await userService.RegisterUser(userCredentials);
+                await userService.RegisterUser(userCredentials, cancellationToken);
                 return Results.Ok();
 
             }).AddEndpointFilter<UserRegisterFilter>()
