@@ -1,15 +1,13 @@
 
 using System.Security.Claims;
-using BookStoreMinimalApi.Application.Authorization;
 using BookStoreMinimalApi.Application.Exceptions;
-using BookStoreMinimalApi.Application.Interfaces.Abstractions;
 using BookStoreMinimalApi.Application.Interfaces.Abstractions.Authorization;
 using BookStoreMinimalApi.Application.Interfaces.Services;
-using BookStoreMinimalApi.Application.Users;
 using BookStoreMinimalApi.Application.Users.DTOs;
 using BookStoreMinimalApi.Domain.Entities;
 using BookStoreMinimalApi.Domain.Exceptions.Users;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookStoreMinimalApi.Data.Services
 {
@@ -45,13 +43,13 @@ namespace BookStoreMinimalApi.Data.Services
             var claims = (await _userManager.GetClaimsAsync(requestedUser)).ToList();
 
             string token = _tokenProvider.GenerateToken(requestedUser, claims);
-        
+
 
             return token;
 
         }
 
-        public async Task RegisterUser(UserRegisterDTO userCredentials)
+        public async Task RegisterUser(UserRegisterDTO userCredentials, CancellationToken cancellationToken)
         {
             User createdUser = new User(userCredentials.Login) { Email = userCredentials.Email };
 
@@ -60,15 +58,33 @@ namespace BookStoreMinimalApi.Data.Services
                 new Claim("Role", "User")
             };
 
+            var strategy = _dbContext.Database.CreateExecutionStrategy();
 
-            var result = await _userManager.CreateAsync(createdUser, userCredentials.Password);
-
-            if (!result.Succeeded)
+            await strategy.ExecuteAsync(async () =>
             {
-                string errorMessage = string.Join(", ", result.Errors.Select(e => e.Description));
-                throw new UserCredentialsValidationException(errorMessage);
-            }
-            await _userManager.AddClaimsAsync(createdUser, claims);
+                var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
+
+                try
+                {
+                    var result = await _userManager.CreateAsync(createdUser, userCredentials.Password);
+
+                    if (!result.Succeeded)
+                    {
+                        string errorMessage = string.Join(", ", result.Errors.Select(e => e.Description));
+                        throw new UserCredentialsValidationException(errorMessage);
+                    }
+                    await _userManager.AddClaimsAsync(createdUser, claims);
+
+                    await transaction.CommitAsync(cancellationToken);
+
+                }
+                catch (Exception)
+                {
+                    await transaction.RollbackAsync(cancellationToken);
+                    throw;
+                }
+            });
+
         }
 
         public async Task AddReviewToUser(ClaimsPrincipal claims, Review review)
