@@ -19,14 +19,13 @@ namespace BookStoreMinimalApi.Application.Books.Services
         readonly IBookRepository _bookRepository;
         readonly ICategoryService _categoryService;
         readonly IMapper _mapper;
-        readonly CustomMemoryCache _cache;
-
+        readonly ICacheService<Book> _cache;
         public BookService(IUnitOfWork unitOfWork,
         IBookRepository bookRepository,
         IAuthorService authorService,
         ICategoryService categoryService,
         IMapper mapper,
-        CustomMemoryCache cache)
+        ICacheService<Book> cache)
         {
             _unitOfWork = unitOfWork;
             _bookRepository = bookRepository;
@@ -54,7 +53,7 @@ namespace BookStoreMinimalApi.Application.Books.Services
             };
 
             createdBook = await _bookRepository.AddBook(createdBook);
-           await _unitOfWork.SaveChangesAsync(cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             GetBookByIdDTO mappedBook = _mapper.Map<GetBookByIdDTO>(createdBook);
             return mappedBook;
@@ -65,8 +64,7 @@ namespace BookStoreMinimalApi.Application.Books.Services
             Book requestedBook = await CheckIfBookExistsOrThrowException(id, cancellationToken);
             await _bookRepository.DeleteBook(requestedBook);
             await _unitOfWork.SaveChangesAsync();
-            string key = GetKeyById(id);
-            _cache.Cache.Remove(key);
+            _cache.RemoveFromCache(id);
         }
 
         public async Task<List<GetBookDTO>> GetAllBooks(Filtration filters, CancellationToken cancellationToken)
@@ -80,16 +78,13 @@ namespace BookStoreMinimalApi.Application.Books.Services
 
         public async Task<GetBookByIdDTO> GetBookById(int id, CancellationToken cancellationToken)
         {
-            string key = GetKeyById(id);
-            GetBookByIdDTO? mappedBook = await _cache.Cache.GetOrCreateAsync(key, async (entry) =>
+            Book? requestedBook = _cache.GetFromCache(id, cancellationToken);
+            if (requestedBook is null)
             {
-                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1);
-                entry.SlidingExpiration = TimeSpan.FromMinutes(10);
-                entry.Size = 1;
-                Book requestedBook = await CheckIfBookExistsOrThrowException(id, cancellationToken);
-                return _mapper.Map<GetBookByIdDTO>(requestedBook);
-            });
-
+                requestedBook = await CheckIfBookExistsOrThrowException(id, cancellationToken);
+                _cache.AddToCache(requestedBook, requestedBook.BookId, cancellationToken);
+            }
+            GetBookByIdDTO mappedBook = _mapper.Map<GetBookByIdDTO>(requestedBook);
             return mappedBook!;
         }
 
@@ -101,9 +96,7 @@ namespace BookStoreMinimalApi.Application.Books.Services
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            string key = GetKeyById(id);
-
-            _cache.Cache.Remove(key);
+            _cache.RemoveFromCache(requestedBook.BookId);
 
         }
 
@@ -116,7 +109,6 @@ namespace BookStoreMinimalApi.Application.Books.Services
             }
             return requestedBook;
         }
-        private string GetKeyById(int id) => $"Book:{id}";
 
     }
 }

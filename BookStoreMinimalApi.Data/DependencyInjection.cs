@@ -12,6 +12,7 @@ using BookStoreMinimalApi.Application.Interfaces.Abstractions.Authorization;
 using BookStoreMinimalApi.Domain.Entities;
 using BookStoreMinimalApi.Application.Interfaces.Abstractions;
 using BookStoreMinimalApi.Data.Persistency;
+using BookStoreMinimalApi.Data.Caching;
 
 namespace BookStoreMinimalApi.Data
 {
@@ -43,7 +44,8 @@ namespace BookStoreMinimalApi.Data
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ITokenProvider, JwtTokenProvider>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-            
+            services.AddSingleton(typeof(ICacheService<>), typeof(CacheService<>));
+
             return services;
         }
     }
