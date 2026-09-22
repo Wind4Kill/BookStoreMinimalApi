@@ -11,7 +11,7 @@ namespace BookStoreMinimalApi
     {
         public async static Task SeedData(this WebApplication app)
         {
-            using var scope = app.Services.CreateAsyncScope();
+            await using var scope = app.Services.CreateAsyncScope();
 
             ApplicationContext _context = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
             if (!_context.Books.Any())
@@ -51,7 +51,7 @@ namespace BookStoreMinimalApi
 
         public static async Task UpdateDatabase(this WebApplication app)
         {
-            using var scope = app.Services.CreateAsyncScope();
+            await using var scope = app.Services.CreateAsyncScope();
 
             var _context = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
 
@@ -63,7 +63,7 @@ namespace BookStoreMinimalApi
 
         public static async Task AddAdministrator(this WebApplication app)
         {
-            using var scope = app.Services.CreateAsyncScope();
+            await using var scope = app.Services.CreateAsyncScope();
 
             UserManager<User> userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
 
@@ -84,6 +84,7 @@ namespace BookStoreMinimalApi
                 await userManager.CreateAsync(admin, app.Configuration["AdminCredentials:Password"]!);
                 await userManager.AddClaimsAsync(admin, claims);
             }
+            return;
 
         }
 

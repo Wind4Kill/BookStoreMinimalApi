@@ -64,25 +64,17 @@ namespace BookStoreMinimalApi.Data.Services
             {
                 var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
 
-                try
+                var result = await _userManager.CreateAsync(createdUser, userCredentials.Password);
+
+                if (!result.Succeeded)
                 {
-                    var result = await _userManager.CreateAsync(createdUser, userCredentials.Password);
-
-                    if (!result.Succeeded)
-                    {
-                        string errorMessage = string.Join(", ", result.Errors.Select(e => e.Description));
-                        throw new UserCredentialsValidationException(errorMessage);
-                    }
-                    await _userManager.AddClaimsAsync(createdUser, claims);
-
-                    await transaction.CommitAsync(cancellationToken);
-
+                    string errorMessage = string.Join(", ", result.Errors.Select(e => e.Description));
+                    throw new UserCredentialsValidationException(errorMessage);
                 }
-                catch (Exception)
-                {
-                    await transaction.RollbackAsync(cancellationToken);
-                    throw;
-                }
+                await _userManager.AddClaimsAsync(createdUser, claims);
+
+                await transaction.CommitAsync(cancellationToken);
+
             });
 
         }
