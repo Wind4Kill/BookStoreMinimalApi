@@ -5,7 +5,6 @@ using BookStoreMinimalApi;
 using BookStoreMinimalApi.Api;
 using BookStoreMinimalApi.Api.Endpoints;
 using BookStoreMinimalApi.Application;
-using BookStoreMinimalApi.Application.Authorization;
 using BookStoreMinimalApi.Data;
 using BookStoreMinimalApi.Endpoints;
 using FluentValidation;
@@ -17,7 +16,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly, includeInternalTypes: true);
-builder.Services.Configure<JwtTokenSettings>(builder.Configuration.GetSection("Jwt"));
 builder.Services.AddProblemDetails();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
@@ -50,7 +48,7 @@ builder.Services.AddAutoMapper(cfg =>
       cfg.AddMaps(Assembly.Load("BookStoreMinimalApi.Application"));
 });
 
-builder.Services.AddApplication();
+builder.Services.AddApplication(builder.Configuration);
 builder.Services.AddData(builder.Configuration.GetConnectionString("PostgreConnectionString"));
 
 

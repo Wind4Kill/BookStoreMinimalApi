@@ -5,14 +5,13 @@ using BookStoreMinimalApi.Application.Interfaces.Repositories;
 using BookStoreMinimalApi.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Identity;
 using BookStoreMinimalApi.Application.Interfaces.Services;
 using BookStoreMinimalApi.Data.Services;
 using BookStoreMinimalApi.Application.Interfaces.Abstractions.Authorization;
-using BookStoreMinimalApi.Domain.Entities;
 using BookStoreMinimalApi.Application.Interfaces.Abstractions;
 using BookStoreMinimalApi.Data.Persistency;
 using BookStoreMinimalApi.Data.Caching;
+using BookStoreMinimalApi.Domain.Entities.User;
 
 namespace BookStoreMinimalApi.Data
 {

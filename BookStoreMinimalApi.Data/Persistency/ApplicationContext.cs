@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 using BookStoreMinimalApi.Domain.Entities;
-using Microsoft.AspNetCore.Identity;
+using BookStoreMinimalApi.Domain.Entities.User;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,6 +11,7 @@ public class ApplicationContext : IdentityDbContext<User>
       public DbSet<Book> Books { get; set; }
       public DbSet<Author> Authors { get; set; }
       public DbSet<Category> Categories { get; set; }
+      public DbSet<RefreshToken> RefreshTokens { get; set; }
       public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options) { }
 
       protected override void OnModelCreating(ModelBuilder modelBuilder)

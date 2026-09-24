@@ -8,11 +8,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace BookStoreMinimalApi.Data.Persistency.Configs
 {
-    public class UserConfiguration : IEntityTypeConfiguration<User>
+    public class RefreshTokenConfiguration : IEntityTypeConfiguration<RefreshToken>
     {
-        public void Configure(EntityTypeBuilder<User> builder)
+        public void Configure(EntityTypeBuilder<RefreshToken> builder)
         {
-            builder.HasMany(u => u.Reviews).WithOne().HasForeignKey(r => r.UserId).IsRequired();
+            builder.HasOne(t => t.User).WithMany().HasForeignKey(t => t.UserId);
+            builder.Property(t => t.Token).HasMaxLength(200);
         }
     }
 }

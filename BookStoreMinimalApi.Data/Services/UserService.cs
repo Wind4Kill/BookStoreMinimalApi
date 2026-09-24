@@ -1,10 +1,12 @@
 
 using System.Security.Claims;
+using BookStoreMinimalApi.Application.Authorization.DTOs;
 using BookStoreMinimalApi.Application.Exceptions;
 using BookStoreMinimalApi.Application.Interfaces.Abstractions.Authorization;
 using BookStoreMinimalApi.Application.Interfaces.Services;
 using BookStoreMinimalApi.Application.Users.DTOs;
 using BookStoreMinimalApi.Domain.Entities;
+using BookStoreMinimalApi.Domain.Entities.User;
 using BookStoreMinimalApi.Domain.Exceptions.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -24,9 +26,9 @@ namespace BookStoreMinimalApi.Data.Services
             _tokenProvider = tokenProvider;
         }
 
-        public async Task<string> Login(UserLoginDTO userCredentials)
+        public async Task<GetTokenDTO> Login(UserLoginDTO userCredentials)
         {
-            var requestedUser = await _userManager.FindByEmailAsync(userCredentials.Email);
+            User? requestedUser = await _userManager.FindByEmailAsync(userCredentials.Email);
 
             if (requestedUser is null)
             {
@@ -42,11 +44,26 @@ namespace BookStoreMinimalApi.Data.Services
 
             var claims = (await _userManager.GetClaimsAsync(requestedUser)).ToList();
 
-            string token = _tokenProvider.GenerateToken(requestedUser, claims);
+            string accessToken = _tokenProvider.GenerateAccessToken(requestedUser, claims);
 
+            RefreshToken refreshToken = new RefreshToken()
+            {
+                RefreshTokenId = Guid.NewGuid().ToString(),
+                Token = _tokenProvider.GenerateRefreshToken(),
+                User = requestedUser
+            };
 
-            return token;
+            _dbContext.RefreshTokens.Add(refreshToken);
 
+            await _dbContext.SaveChangesAsync();
+
+            GetTokenDTO tokens = new GetTokenDTO()
+            {
+                AccessToken = accessToken,
+                RefreshToken = refreshToken.Token
+            };
+
+            return tokens;
         }
 
         public async Task RegisterUser(UserRegisterDTO userCredentials, CancellationToken cancellationToken)
@@ -74,7 +91,6 @@ namespace BookStoreMinimalApi.Data.Services
                 await _userManager.AddClaimsAsync(createdUser, claims);
 
                 await transaction.CommitAsync(cancellationToken);
-
             });
 
         }

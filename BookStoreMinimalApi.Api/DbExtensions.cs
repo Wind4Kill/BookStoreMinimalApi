@@ -2,6 +2,7 @@ using System.Collections;
 using System.Security.Claims;
 using BookStoreMinimalApi.Data;
 using BookStoreMinimalApi.Domain.Entities;
+using BookStoreMinimalApi.Domain.Entities.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 

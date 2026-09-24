@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using BookStoreMinimalApi.Application.Authorization;
+using BookStoreMinimalApi.Application.Authorization.DTOs;
 using BookStoreMinimalApi.Application.Users;
 using BookStoreMinimalApi.Application.Users.DTOs;
 using BookStoreMinimalApi.Domain.Entities;
@@ -15,7 +16,7 @@ namespace BookStoreMinimalApi.Application.Interfaces.Services
     public interface IUserService
     {
         public Task RegisterUser(UserRegisterDTO userCredentials, CancellationToken cancellationToken);
-        public Task<string> Login(UserLoginDTO userCredentials);
+        public Task<GetTokenDTO> Login(UserLoginDTO userCredentials);
 
         public Task AddReviewToUser(ClaimsPrincipal claims, Review review);
     }
