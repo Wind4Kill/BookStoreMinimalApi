@@ -15,10 +15,11 @@ namespace BookStoreMinimalApi.Application.Interfaces.Services
 {
     public interface IUserService
     {
-        public Task RegisterUser(UserRegisterDTO userCredentials, CancellationToken cancellationToken);
-        public Task<GetTokenDTO> Login(UserLoginDTO userCredentials);
+         Task RegisterUser(UserRegisterDTO userCredentials, CancellationToken cancellationToken);
+         Task<GetTokensDTO> Login(UserLoginDTO userCredentials);
 
-        public Task AddReviewToUser(ClaimsPrincipal claims, Review review);
+         Task AddReviewToUser(ClaimsPrincipal claims, Review review);
+         Task<GetTokensDTO> RefreshAccessToken(string token);
     }
      
 }

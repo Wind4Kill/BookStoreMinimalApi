@@ -10,5 +10,7 @@ namespace BookStoreMinimalApi.Domain.Entities.User
         public User() : base() { }
         public User(string userName) : base(userName) { }
         public ICollection<Review> Reviews { get; set; } = null!;
+
+        public ICollection<RefreshToken> RefreshTokens { get; set; } = null!;
     }
 }

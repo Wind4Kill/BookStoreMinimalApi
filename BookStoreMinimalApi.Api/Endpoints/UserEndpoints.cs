@@ -28,9 +28,15 @@ namespace BookStoreMinimalApi.Api.Endpoints
 
             userEndpoints.MapPost("login", async (UserLoginDTO userCredentials, IUserService userService) =>
             {
-                GetTokenDTO tokens = await userService.Login(userCredentials);
+                GetTokensDTO tokens = await userService.Login(userCredentials);
                 return Results.Ok(tokens);
-            }).AddEndpointFilter<UserLoginFilter>().Produces<GetTokenDTO>(200).ProducesValidationProblem();
+            }).AddEndpointFilter<UserLoginFilter>().Produces<GetTokensDTO>(200).ProducesValidationProblem();
+
+            userEndpoints.MapPost("/refresh", async (string refreshToken, IUserService userService) =>
+            {
+                GetTokensDTO tokens = await userService.RefreshAccessToken(refreshToken);
+                return Results.Ok(tokens);
+            }).RequireAuthorization().Produces<GetTokensDTO>();
         }
     }
 }

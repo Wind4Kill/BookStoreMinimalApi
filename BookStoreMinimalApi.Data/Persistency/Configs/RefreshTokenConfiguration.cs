@@ -12,7 +12,7 @@ namespace BookStoreMinimalApi.Data.Persistency.Configs
     {
         public void Configure(EntityTypeBuilder<RefreshToken> builder)
         {
-            builder.HasOne(t => t.User).WithMany().HasForeignKey(t => t.UserId);
+            builder.HasOne(t => t.User).WithMany(u=>u.RefreshTokens).HasForeignKey(t => t.UserId);
             builder.Property(t => t.Token).HasMaxLength(200);
         }
     }

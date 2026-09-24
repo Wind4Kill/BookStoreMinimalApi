@@ -53,5 +53,6 @@ namespace BookStoreMinimalApi.Data.Services
                   string refreshToken = Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
                   return refreshToken;
             }
+            
       }
 }

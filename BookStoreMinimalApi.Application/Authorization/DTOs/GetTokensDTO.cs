@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace BookStoreMinimalApi.Application.Authorization.DTOs
 {
-    public class GetTokenDTO
+    public class GetTokensDTO
     {
         public string AccessToken { get; set; } = null!;
         public string RefreshToken { get; set; } = null!;
