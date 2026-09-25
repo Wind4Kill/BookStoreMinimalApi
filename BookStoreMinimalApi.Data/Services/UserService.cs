@@ -91,7 +91,7 @@ namespace BookStoreMinimalApi.Data.Services
 
             await strategy.ExecuteAsync(async () =>
             {
-                var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
+                await using var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
 
                 var result = await _userManager.CreateAsync(createdUser, userCredentials.Password);
 
@@ -120,7 +120,7 @@ namespace BookStoreMinimalApi.Data.Services
 
         public async Task<GetTokensDTO> RefreshAccessToken(string token)
         {
-            RefreshToken? refreshToken = await _dbContext.RefreshTokens.Include(r => r.User).SingleAsync(r => r.Token == token);
+            RefreshToken? refreshToken = await _dbContext.RefreshTokens.Include(r => r.User).SingleOrDefaultAsync(r => r.Token == token);
             if (refreshToken is null || refreshToken.ExpirationUtc < DateTime.UtcNow)
             {
                 throw new InvalidOperationException("Token expired.");
@@ -135,6 +135,7 @@ namespace BookStoreMinimalApi.Data.Services
             string accessToken = _tokenProvider.GenerateAccessToken(refreshToken.User, claims);
             refreshToken.Token = _tokenProvider.GenerateRefreshToken();
             refreshToken.ExpirationUtc = DateTime.UtcNow.AddDays(7);
+            await _dbContext.SaveChangesAsync();
 
             GetTokensDTO tokens = new()
             {
@@ -147,7 +148,7 @@ namespace BookStoreMinimalApi.Data.Services
 
         private bool CheckUserId(string userId)
         {
-            bool isMatch = _httpContext!.HttpContext!.User.FindFirstValue(ClaimTypes.NameIdentifier) == userId ? true : false;
+            bool isMatch = _httpContext!.HttpContext!.User.FindFirstValue(ClaimTypes.NameIdentifier) == userId;
             return isMatch;
         }
     }
